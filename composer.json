@@ -1,0 +1,8 @@
+{
+    "require": {
+        "scriptotek/sru-client": "*",
+        "scriptotek/simplemarcparser": "dev-master",
+        "rmccue/requests": ">=1.0"
+    },
+    "minimum-stability": "dev"
+}

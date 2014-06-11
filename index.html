@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bibsys authority search</title>
+ 
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+ 
+  <!-- Optional theme -->
+  <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+--> 
+  <!-- Font Awesome -->
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+ 
+  <style>
+   
+  </style>
+ 
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js"></script>
+  <script src="app.js"></script>
+ 
+  <link href="site.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="ubercontainer">
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+      <div class="navbar-header">
+        <a class="navbar-brand" href="./">Search Bibsys authority records for persons</a>
+      </div>
+
+      <form class="navbar-form" role="search" ng-submit="submit()" ng-controller="SearchFormCtrl">
+        <div class="form-group" style="display:inline;">
+
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Lastname, Firstname" ng-model="query" autofocus>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-search"></span> Search
+              </button>
+            </span>
+          </div><!-- /input-group -->
+        </div><!-- /form-group -->
+      </form>
+
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <div class="container">
+    <div ng-view></div>
+  </div>
+
+  <footer>
+    Tool by <a href="https://no.wikipedia.org/wiki/Bruker:Danmichaelo">@Danmichaelo</a>.
+    Source <a href="http://github.com/danmichaelo/bsaut">@GitHub</a> available under MIT license.
+    Data from <a href="http://www.bibsys.no/bibsys-betadata/search-and-retrieve-via-url-sru/">@Bibsys</a>.
+  </footer>
+  </div>
+</body> 
+</html>

@@ -1,0 +1,93 @@
+<h2>
+	{{record.label ? record.label : id }}
+</h2>
+
+<div class="row header">
+	<h3 class="col-sm-6">Bibsys authority record</h3>
+	<div class="col-sm-6 h3r">
+		<i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'BIBSYS authority query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
+	</div>
+</div>
+<table class="table">
+	<tr>
+		<th style="width:25%">
+			ID
+		</th>
+		<td>
+			{{record.id}}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Name
+		</th>
+		<td>
+			{{record.name}}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Birth
+		</th>
+		<td>
+			{{record.birth}} 
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Death
+		</th>
+		<td>
+			{{record.death}}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Gender
+		</th>
+		<td>
+			{{record.gender}}
+		</td>
+	</tr>
+</table>
+
+
+<div class="row header">
+	<h3 class="col-sm-6">Connected services</h3>
+	<div class="col-sm-6 h3r">
+		VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
+		WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
+	</div>
+</div>
+
+<table class="table">
+	<tr>
+		<th style="width:25%">
+			VIAF
+		</th>
+		<td viaf-link>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Wikidata-ID
+		</th>
+		<td wd-link>
+		</td>
+	</tr>
+</table>
+
+<div class="row header">
+	<h3 class="col-sm-7">Bibliographic records from Bibsys</h3>
+	<div class="col-sm-5 h3r">
+		<i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i> {{publications.length ? publications.length + ' bibliographic records fetched in ' : 'Waited for'}} {{biblioTimer | number:2 }} secs
+	</div>
+</div>
+
+<ul>
+	<li ng-repeat="pub in publications">
+		<a href="http://ask.bibsys.no/ask/action/show?pid={{pub.id}}&amp;kid=biblio">
+			{{pub.title}} {{pub.subtitle}} {{pub.year}}
+		</a>
+	</li>
+</ul>

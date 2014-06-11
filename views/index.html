@@ -1,0 +1,22 @@
+  <div ng-show="busy">
+    <i class="fa fa-cog fa-spin" ng-show="busy"></i>
+    Hold on, Bibsys is working hard to process your search
+  </div>
+  <div ng-show="!busy && !stat">
+    Attempted human-friendly interface for searching Bibsys person authorities.
+    Right-truncated by default.
+  </div>
+  <div ng-show="!busy && stat">
+    {{stat}}
+  </div>
+  <ul>
+    <li ng-repeat="record in records">
+      <a href="#/show/{{record.id}}">{{record.id}}</a> : {{record.name}}
+      <span ng-show="record.birth || record.death">
+        ({{record.birth}}-{{record.death}})
+      </span>
+      <i class="fa fa-male" ng-show="record.gender == 'male'"></i>
+      <i class="fa fa-female" ng-show="record.gender == 'female'"></i>
+    </li>
+  </ul>
+ 
