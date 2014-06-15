@@ -3,7 +3,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('app', ['ngRoute'])
  
-.config(function($routeProvider) {
+.config(function($routeProvider, $locationProvider) {
 
   $routeProvider
     .when('/', {
@@ -21,6 +21,9 @@ angular.module('app', ['ngRoute'])
     .otherwise({
       redirectTo: '/'
     });
+
+  // use the HTML5 History API
+  $locationProvider.html5Mode(true);
 
 })
 
