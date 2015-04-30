@@ -1,2 +1,5 @@
 /composer.lock
 /vendor
+*.log
+composer.phar
+.composer
