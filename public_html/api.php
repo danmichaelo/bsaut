@@ -13,27 +13,28 @@ class ViafParser
     
     function parse($dom)
     {
+
         $out = array();
-        $out['id'] = $dom->text('ns2:viafID');
+        $out['id'] = $dom->text('viaf:viafID');
 
         $out['titles'] = array_map(function($work) {
             return array(
                 'count' => $work->attr('count'),
-                'title' => $work->text('ns2:text'),
+                'title' => $work->text('viaf:text'),
                 'sources' => array_map(function($source) {
                     return $source->text();
-                }, $work->xpath('ns2:sources/ns2:s'))
+                }, $work->xpath('viaf:sources/viaf:s'))
             );
-        }, $dom->xpath('//ns2:titles/ns2:data'));
+        }, $dom->xpath('//viaf:titles/viaf:data'));
 
         $out['mainHeadings'] = array_map(function($heading) {
             return array(
-                'title' => $heading->text('ns2:text'),
+                'title' => $heading->text('viaf:text'),
                 'sources' => array_map(function($source) {
                     return $source->text();
-                }, $heading->xpath('ns2:sources/ns2:s'))
+                }, $heading->xpath('viaf:sources/viaf:s'))
             );
-        }, $dom->xpath('//ns2:mainHeadings/ns2:data'));
+        }, $dom->xpath('//viaf:mainHeadings/viaf:data'));
 
         return $out;
     }
@@ -146,6 +147,7 @@ $out = array(
 );
 
 foreach ($response->records as $record) {
+    $record->data->registerXPathNamespace('marc', 'http://www.loc.gov/MARC21/slim');
     $record->data->registerXPathNamespace('viaf', 'http://viaf.org/viaf/terms#');
 
     // xpath union not supported for some reason

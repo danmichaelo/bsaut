@@ -6,15 +6,20 @@
 	<h3 class="col-sm-6">Bibsys authority record</h3>
 	<div class="col-sm-6 h3r">
 		<i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'BIBSYS authority query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
-	</div>
+    </div>
 </div>
+    <div style="font-size:80%;">
+        <a href="http://sru.bibsys.no/search/authority?version=1.2&operation=searchRetrieve&startRecord=1&maximumRecords=1&query=rec.identifier%3D%22{{ record.id }}%22&recordSchema=marcxchange">
+        View MARC/XML
+    </a>
+    </div>
 <table class="table">
 	<tr>
 		<th style="width:25%">
 			ID
 		</th>
 		<td>
-			{{record.id}}
+            {{record.id}}
 		</td>
 	</tr>
 	<tr>
@@ -23,6 +28,16 @@
 		</th>
 		<td>
 			{{record.name}}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Alternative names
+		</th>
+        <td>
+            <div ng-repeat="name in record.nameVariants">
+                {{name}}
+            </div>
 		</td>
 	</tr>
 	<tr>
