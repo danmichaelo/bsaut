@@ -200,6 +200,31 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       });
     }
 
+    function querySparql() {
+    console.log('Query SPARQL');
+      $http({
+        url: 'api.php',
+        method: 'GET',
+        params: {
+          sparql: id
+        }
+      })
+      .error(function(response, status, headers, config) {
+        deferred.reject(status);
+      })
+      .success(function(response) {
+
+        if (response.items.length == 0) {
+          deferred.resolve(data);
+          return;
+        }
+        data.id = response.items[0].split('Q')[1];
+        queryWd()
+      });
+    }
+
+    
+
     function queryWd() {
       console.log('Query WD');
       $http({
@@ -222,7 +247,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       });
     }
 
-    queryWdq();
+    querySparql();
 
     return deferred.promise;
   }

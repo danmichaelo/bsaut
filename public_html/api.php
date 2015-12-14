@@ -100,6 +100,25 @@ if (isset($_GET['id'])) {
     }
     exit;
 
+// SPARQL
+} else if (isset($_GET['sparql'])) {
+
+    $q = ['query' => "
+        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+        SELECT ?q WHERE { ?q wdt:P1015 \"" . $_GET['sparql'] . "\" . }
+        "];
+    $headers = array('Accept' => 'application/json');
+    $res = Requests::get('https://query.wikidata.org/bigdata/namespace/wdq/sparql?' . http_build_query($q), $headers);
+    $res = json_decode($res->body);
+    $bindings = $res->results->bindings;
+    header('Content-type: application/json; charset=utf-8');
+    if (count($bindings) == 0) {
+        echo json_encode(['items' => []]);
+    } else {
+        echo json_encode(['items' => [$bindings[0]->q->value]]);
+    }
+    exit;
+
 // WD
 } else if (isset($_GET['wd'])) {
 
