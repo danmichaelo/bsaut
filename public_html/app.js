@@ -158,7 +158,7 @@ angular.module('app', ['ngRoute'])
         console.log('wikidata changed');
         if (wikidata !== undefined) {          
           if (wikidata && wikidata.id) {
-            element.html('<a href="http://wikidata.org/wiki/Q' + wikidata.id + '">Q' + wikidata.id + '</a> (<a href="http://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
+            element.html('<a href="https://wikidata.org/wiki/Q' + wikidata.id + '">Q' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
           } else {
             element.html('<em>Record not connected to Wikidata</em>');
           }
@@ -178,7 +178,7 @@ angular.module('app', ['ngRoute'])
     function queryWdq() {
     console.log('Query WDQ');
       $http({
-        url: 'http://wdq.wmflabs.org/api',
+        url: 'https://wdq.wmflabs.org/api',
         method: 'JSONP',
         params: {
           q: 'string[1015:"' + id + '"]',
@@ -203,7 +203,7 @@ angular.module('app', ['ngRoute'])
     function queryWd() {
       console.log('Query WD');
       $http({
-        url: 'http://www.wikidata.org/w/api.php',
+        url: 'https://www.wikidata.org/w/api.php',
         method: 'JSONP',
         params: {
           action: 'wbgetentities',
