@@ -1,8 +1,8 @@
 'use strict';
  
 // Declare app level module which depends on filters, and services
-angular.module('app', ['ngRoute'])
- 
+angular.module('app', ['ngRoute', 'infinite-scroll'])
+
 .config(function($routeProvider, $locationProvider) {
 
   $routeProvider
@@ -233,11 +233,12 @@ angular.module('app', ['ngRoute'])
 
   $scope.busy = true;
   $scope.authorityBusy = true;
-  $scope.biblioBusy = true;
+  $scope.biblioBusy = false;
   $scope.viafBusy = true;
   $scope.wdBusy = true;
 
-  var tasksLeft = 4;
+  var tasksLeft = 3;
+  var nextRecordPosition = 1;
   $scope.id = $routeParams.id;
 
   function taskDone() {
@@ -274,22 +275,24 @@ angular.module('app', ['ngRoute'])
     taskDone();    
   });
 
+  $scope.morePublications = function() {
+    if (!nextRecordPosition || $scope.biblioBusy) {
+      return;
+    }
+    console.log('Getting more bibliographic records, starting at ', nextRecordPosition);
 
-  function getBiblio(start) {
-    $http.get('api.php?pub=' + $scope.id + '&start=' + start)
+    $scope.biblioBusy = true;
+    $http.get('api.php?pub=' + $scope.id + '&start=' + nextRecordPosition)
      .success(function(response) {
       $scope.publications = $scope.publications.concat(response.records);
-      if (response.nextRecordPosition) {
-        getBiblio(response.nextRecordPosition);
-      } else {
-        $scope.biblioBusy = false;
-        taskDone();
-      }
+      nextRecordPosition = response.nextRecordPosition;
+      $scope.biblioBusy = false;
      });
-  }
+  };
 
   $scope.publications = [];
-  getBiblio(1);
+
+  // getBiblio();
 
   var startTime = (new Date()).getTime()/1000;
 
@@ -298,14 +301,16 @@ angular.module('app', ['ngRoute'])
     if ($scope.authorityBusy) $scope.authorityTimer = t;
     if ($scope.viafBusy) $scope.viafTimer = t;
     if ($scope.wdBusy) $scope.wdTimer = t;
-    if ($scope.biblioBusy) $scope.biblioTimer = t
+    if ($scope.biblioBusy) $scope.biblioTimer = t;
     if (tasksLeft) $timeout(upTimer, 50);
   }
 
-  $scope.authorityTimer = 0
+  $scope.authorityTimer = 0;
   $scope.biblioTimer = 0;
   $scope.viafTimer = 0;
   $scope.wdTimer = 0;
   upTimer();  
  
 }]);
+
+angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 250);

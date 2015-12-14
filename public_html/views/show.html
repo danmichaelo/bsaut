@@ -95,14 +95,18 @@
 <div class="row header">
 	<h3 class="col-sm-7">Bibliographic records from Bibsys</h3>
 	<div class="col-sm-5 h3r">
-		<i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i> {{publications.length ? publications.length + ' bibliographic records fetched in ' : 'Waited for'}} {{biblioTimer | number:2 }} secs
+		<i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i> {{publications.length ? publications.length + ' bibliographic records fetched' : 'Waiting'}}
 	</div>
 </div>
 
-<ul>
+<ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
 	<li ng-repeat="pub in publications">
 		<a href="http://ask.bibsys.no/ask/action/show?pid={{pub.id}}&amp;kid=biblio">
 			{{pub.title}} {{pub.subtitle}} {{pub.year}}
 		</a>
 	</li>
 </ul>
+
+<div ng-show="biblioBusy">
+	<i class="fa fa-cog fa-spin"></i> Fetching records, hold on…
+</div>
