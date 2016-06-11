@@ -93,7 +93,7 @@ if (isset($_GET['id'])) {
     $p = 'ViafParser';
     $url = 'http://viaf.org/viaf/search';
     $schema = 'default'; // VIAF-XML
-    $query = 'cql.any="' . $_GET['viaf'] . '"';
+    $query = 'local.source="bibsys|' . $_GET['viaf'] . '"';
     $limit = 1;
     $extras = array('httpAccept' => 'application/xml');
 
