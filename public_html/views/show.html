@@ -101,7 +101,7 @@
 
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
 	<li ng-repeat="pub in publications">
-		<a href="http://ask.bibsys.no/ask/action/show?pid={{pub.id}}&amp;kid=biblio">
+		<a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
 			{{pub.title}} {{pub.subtitle}} {{pub.year}}
 		</a>
 	</li>
