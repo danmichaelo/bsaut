@@ -3,3 +3,10 @@
 *.log
 composer.phar
 .composer
+.bash_history
+.inputrc
+.profile
+.vim-fuf-data/
+.viminfo
+replica.my.cnf
+service.manifest
