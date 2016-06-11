@@ -46,10 +46,12 @@ $start = isset($_GET['start'])
     ? intval($_GET['start'])
     : 1;
 
+$sru_version = '1.1';
+
 // Lookup by id
 if (isset($_GET['id'])) {
     $p = new AuthorityParser;
-    $url = 'http://sru.bibsys.no/search/authority';
+    $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $query = 'rec.identifier="' . $_GET['id'] . '"';
     $limit = 1;
@@ -57,22 +59,29 @@ if (isset($_GET['id'])) {
 // Search by query
 } else if (isset($_GET['q'])) {
     $p = new AuthorityParser;
-    $url = 'http://sru.bibsys.no/search/authority';
+    $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $q = $_GET['q'];
     $m = preg_match('/^([^,]+) ([^, ]+)$/', $q, $matches);
     if ($m) {
         $q = $matches[2] . ', ' . $matches[1];
     }
-    $query = 'rec.identifier="' . $q . '" OR bib.namePersonal="' . $q . '*"';
+    $m = preg_match('/^[0-9]+$/', $q);
+    if ($m) {
+        $query = 'rec.identifier="' . $q . '"';
+    } else {
+        $query = 'bib.namePersonal="' . $q . '*"';
+    }
+
     $limit = 25;
 
 // Lookup publications by id
 } else if (isset($_GET['pub'])) {
     $p = new BibliographicParser;
-    $schema = 'marcxchange';
-    $url = 'http://sru.bibsys.no/search/biblio';
-    $query = 'bs.autid="' . $_GET['pub'] . '"';
+    $schema = 'marcxml';
+    $sru_version = '1.2';
+    $url = 'https://bibsys-network.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK';
+    $query = 'alma.authority_id="' . $_GET['pub'] . '"';
     $limit = 25;
 
 // Lookup VIAF
@@ -145,7 +154,7 @@ if (isset($_GET['id'])) {
 
 $client = new SruClient($url, array(
     'schema' => $schema,
-    'version' => '1.1',
+    'version' => $sru_version,
     'user-agent' => 'BsAutSearch/0.1'
 ));
 
