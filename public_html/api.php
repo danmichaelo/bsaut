@@ -5,13 +5,13 @@ ini_set('display_errors', '1');
 
 require_once('../vendor/autoload.php');
 use Scriptotek\Sru\Client as SruClient;
-use Scriptotek\SimpleMarcParser\AuthorityParser;
-use Scriptotek\SimpleMarcParser\BibliographicParser;
+use Scriptotek\SimpleMarcParser\AuthorityRecord;
+use Scriptotek\SimpleMarcParser\BibliographicRecord;
 
 class ViafParser
 {
     
-    function parse($dom)
+    function __construct($dom)
     {
 
         $out = array();
@@ -36,7 +36,11 @@ class ViafParser
             );
         }, $dom->xpath('//viaf:mainHeadings/viaf:data'));
 
-        return $out;
+        $this->data = $out;
+    }
+
+    public function toArray() {
+        return $this->data;
     }
 }
 
@@ -50,7 +54,7 @@ $sru_version = '1.1';
 
 // Lookup by id
 if (isset($_GET['id'])) {
-    $p = new AuthorityParser;
+    $p = 'Scriptotek\SimpleMarcParser\AuthorityRecord';
     $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $query = 'rec.identifier="' . $_GET['id'] . '"';
@@ -58,7 +62,7 @@ if (isset($_GET['id'])) {
 
 // Search by query
 } else if (isset($_GET['q'])) {
-    $p = new AuthorityParser;
+    $p = 'Scriptotek\SimpleMarcParser\AuthorityRecord';
     $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $q = $_GET['q'];
@@ -77,7 +81,7 @@ if (isset($_GET['id'])) {
 
 // Lookup publications by id
 } else if (isset($_GET['pub'])) {
-    $p = new BibliographicParser;
+    $p = 'Scriptotek\SimpleMarcParser\BibliographicRecord';
     $schema = 'marcxml';
     $sru_version = '1.2';
     $url = 'https://bibsys-network.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK';
@@ -86,7 +90,7 @@ if (isset($_GET['id'])) {
 
 // Lookup VIAF
 } else if (isset($_GET['viaf'])) {
-    $p = new ViafParser;
+    $p = 'ViafParser';
     $url = 'http://viaf.org/viaf/search';
     $schema = 'default'; // VIAF-XML
     $query = 'cql.any="' . $_GET['viaf'] . '"';
@@ -160,13 +164,13 @@ $client = new SruClient($url, array(
 
 $response = $client->search($query, $start, $limit, $extras);
 $url = $client->urlTo($query, $start, $limit, $extras);
-if ($response->error) {
-    echo json_encode(array(
-        'url' => $url,
-        'error' => $response->error
-    ));
-    exit;
-}
+//if ($response->error) {
+//    echo json_encode(array(
+//        'url' => $url,
+//        'error' => $response->error
+//    ));
+//    exit;
+//}
 $out = array(
 	'url' => $url,
     'numberOfRecords' => $response->numberOfRecords,
@@ -181,7 +185,8 @@ foreach ($response->records as $record) {
     // xpath union not supported for some reason
     $el = $record->data->first('marc:record') ?: $record->data->first('viaf:VIAFCluster');
 
-	$out['records'][] = $p->parse($el);
+    $x = new $p($el);
+	$out['records'][] = $x->toArray();
 }
 
 //header('Access-Control-Allow-Origin: *');
