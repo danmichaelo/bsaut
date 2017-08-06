@@ -74,7 +74,7 @@ if (isset($_GET['id'])) {
     if ($m) {
         $query = 'rec.identifier="' . $q . '"';
     } else {
-        $query = 'bib.namePersonal="' . $q . '*"';
+        $query = 'cql.allIndexes="' . $q . '*"';
     }
 
     $limit = 25;
