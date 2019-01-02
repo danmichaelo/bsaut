@@ -85,7 +85,7 @@ if (isset($_GET['id'])) {
     $schema = 'marcxml';
     $sru_version = '1.2';
     $url = 'https://bibsys-network.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK';
-    $query = 'alma.authority_id="' . $_GET['pub'] . '"';
+    $query = 'alma.authority_id="(NO-TrBIB)' . $_GET['pub'] . '"';
     $limit = 25;
 
 // Lookup VIAF
@@ -186,7 +186,7 @@ foreach ($response->records as $record) {
     $el = $record->data->first('marc:record') ?: $record->data->first('viaf:VIAFCluster');
 
     $x = new $p($el);
-	$out['records'][] = $x->toArray();
+    $out['records'][] = $x->toArray();
 }
 
 //header('Access-Control-Allow-Origin: *');
