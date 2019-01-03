@@ -189,7 +189,9 @@ foreach ($response->records as $record) {
     $out['records'][] = $x->toArray();
 }
 
-//header('Access-Control-Allow-Origin: *');
+if (isset($_GET['origin'])) {
+    header('Access-Control-Allow-Origin: *');
+}
 header('Content-type: application/json; charset=utf-8');
 if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
     echo json_encode($out, JSON_PRETTY_PRINT);
