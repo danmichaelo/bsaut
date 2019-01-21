@@ -10,10 +10,18 @@
 </div>
     <div style="font-size:80%;">
         <a href="https://authority.bibsys.no/authority/rest/sru?version=1.2&operation=searchRetrieve&startRecord=1&maximumRecords=1&query=rec.identifier%3D%22{{ record.id }}%22&recordSchema=marcxchange">
-        View MARC/XML
+        View source (MARC/XML)
     </a>
     </div>
 <table class="table">
+	<tr>
+		<th style="width:25%">
+			Record type
+		</th>
+		<td>
+            {{record.class}}
+		</td>
+	</tr>
 	<tr>
 		<th style="width:25%">
 			ID
@@ -40,7 +48,7 @@
             </div>
 		</td>
 	</tr>
-	<tr>
+	<tr ng-show="record.birth">
 		<th>
 			Birth
 		</th>
@@ -48,7 +56,7 @@
 			{{record.birth}} 
 		</td>
 	</tr>
-	<tr>
+	<tr ng-show="record.death">
 		<th>
 			Death
 		</th>
@@ -56,7 +64,7 @@
 			{{record.death}}
 		</td>
 	</tr>
-	<tr>
+	<tr ng-show="record.genders">
 		<th>
 			Gender
 		</th>
