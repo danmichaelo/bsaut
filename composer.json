@@ -2,7 +2,9 @@
     "require": {
         "scriptotek/sru-client": "*",
         "scriptotek/simplemarcparser": "dev-master",
-        "rmccue/requests": ">=1.0"
+        "rmccue/requests": ">=1.0",
+        "illuminate/support": "5.2.45"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+"prefer-stable": true
 }
