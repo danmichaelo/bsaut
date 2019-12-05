@@ -5,7 +5,7 @@
   <base href="/bsaut/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bibsys authority search</title>
- 
+
   <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
   <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="site.css" rel="stylesheet">
@@ -19,40 +19,40 @@
 </head>
 <body>
 
-<div class="ubercontainer">
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="ubercontainer">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">Search Bibsys authority records</a>
+        </div>
+
+        <form class="navbar-form" role="search" ng-submit="submit()" ng-controller="SearchFormCtrl">
+          <div class="form-group" style="display:inline;">
+
+            <div class="input-group" style="display: table;">
+              <input type="text" class="form-control" placeholder="Person or organization" ng-model="query" autofocus>
+              <span class="input-group-btn" style="width:1%;">
+                <button class="btn btn-default" type="submit">
+                  <span class="glyphicon glyphicon-search"></span> Search
+                </button>
+              </span>
+            </div><!-- /input-group -->
+          </div><!-- /form-group -->
+        </form>
+
+      </div><!-- /.container-fluid -->
+    </nav>
+
     <div class="container">
+      <div ng-view></div>
+    </div>
 
-      <div class="navbar-header">
-        <a class="navbar-brand" href="./">Search Bibsys authority records</a>
-      </div>
-
-      <form class="navbar-form" role="search" ng-submit="submit()" ng-controller="SearchFormCtrl">
-        <div class="form-group" style="display:inline;">
-
-          <div class="input-group" style="display: table;">
-            <input type="text" class="form-control" placeholder="Person or organization" ng-model="query" autofocus>
-            <span class="input-group-btn" style="width:1%;">
-              <button class="btn btn-default" type="submit">
-                <span class="glyphicon glyphicon-search"></span> Search
-              </button>
-            </span>
-          </div><!-- /input-group -->
-        </div><!-- /form-group -->
-      </form>
-
-    </div><!-- /.container-fluid -->
-  </nav>
-
-  <div class="container">
-    <div ng-view></div>
+    <footer>
+      Tool by <a href="https://no.wikipedia.org/wiki/Bruker:Danmichaelo">@Danmichaelo</a>.
+      Source <a href="http://github.com/danmichaelo/bsaut">@GitHub</a> available under MIT license.
+      Data from <a href="http://www.bibsys.no/bibsys-betadata/search-and-retrieve-via-url-sru/">@Bibsys</a>.
+    </footer>
   </div>
-
-  <footer>
-    Tool by <a href="https://no.wikipedia.org/wiki/Bruker:Danmichaelo">@Danmichaelo</a>.
-    Source <a href="http://github.com/danmichaelo/bsaut">@GitHub</a> available under MIT license.
-    Data from <a href="http://www.bibsys.no/bibsys-betadata/search-and-retrieve-via-url-sru/">@Bibsys</a>.
-  </footer>
-  </div>
-</body> 
+</body>
 </html>

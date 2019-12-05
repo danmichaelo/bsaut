@@ -1,7 +1,7 @@
 {
-        "name" : "BsAut",
-        "description" : "Search the Norwegian Bibsys authority register for persons, and check linkage to VIAF and Wikidata.",
-        "url" : "http://tools.wmflabs.org/bsaut/",
-        "keywords" : "libraries, authority control, search",
-        "author" : "Dan Michael O. Heggø"
+    "name": "BsAut",
+    "description": "Search the Norwegian Bibsys authority register for persons, and check linkage to VIAF and Wikidata.",
+    "url": "http://tools.wmflabs.org/bsaut/",
+    "keywords": "libraries, authority control, search",
+    "author": "Dan Michael O. Heggø"
 }

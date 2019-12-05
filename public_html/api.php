@@ -10,7 +10,6 @@ use Scriptotek\SimpleMarcParser\BibliographicRecord;
 
 class ViafParser
 {
-    
     function __construct($dom)
     {
 
@@ -172,9 +171,9 @@ $url = $client->urlTo($query, $start, $limit, $extras);
 //    exit;
 //}
 $out = array(
-	'url' => $url,
+    'url' => $url,
     'numberOfRecords' => $response->numberOfRecords,
-	'records' => array(),
+    'records' => array(),
     'nextRecordPosition' => $response->nextRecordPosition,
 );
 

@@ -1,5 +1,5 @@
 'use strict';
- 
+
 // Declare app level module which depends on filters, and services
 angular.module('app', ['ngRoute', 'infinite-scroll'])
 
@@ -67,7 +67,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   $scope.records = [];
   $scope.stat = ''
   $scope.query = $routeParams.query;
- 
+
   $scope.$on('requestStart', function() {
     $scope.busy = true;
   });
@@ -79,8 +79,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   $scope.$on('searchResults', function(e, response) {
     console.log('Got results');
     $scope.records = response.records;
-    $scope.stat = response.numberOfRecords > response.records.length 
-      ? 'Showing ' + response.records.length + ' of ' + response.numberOfRecords + ' record(s) found' 
+    $scope.stat = response.numberOfRecords > response.records.length
+      ? 'Showing ' + response.records.length + ' of ' + response.numberOfRecords + ' record(s) found'
       : response.records.length + ' record(s) found';
   });
 
@@ -95,7 +95,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   $scope.busy = false;
   $scope.query = $routeParams.query;
   $scope.query = '';
- 
+
   $scope.submit = function() {
     $location.path('/search/' + $scope.query);
   };
@@ -116,21 +116,21 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
 }])
 
-.directive('viafLink', function () { 
-  return { 
+.directive('viafLink', function () {
+  return {
     // We limit this directive to attributes only
     restrict : 'A',
 
     // We will replace the original element code
     replace : true,
-    
+
     // We must supply at least one element in the code to replace the div
     template : '<td><i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> Checking</td>',
 
     link: function(scope, element, attrs) {
       scope.$watch('viaf', function(viaf) {
         console.log('VIAF changed');
-        if (viaf !== undefined) {          
+        if (viaf !== undefined) {
           if (viaf && viaf.id) {
             element.html('<a href="http://viaf.org/viaf/' + viaf.id + '/">' + viaf.id + '</a> : ' + viaf.mainHeadings.reduce(function(prev, cur) { return (prev ? prev + ' | ' : '') + cur.title; }, null) );
           } else {
@@ -142,21 +142,21 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   }
 })
 
-.directive('wdLink', function () { 
-  return { 
+.directive('wdLink', function () {
+  return {
     // We limit this directive to attributes only
     restrict : 'A',
 
     // We will replace the original element code
     replace : true,
-    
+
     // We must supply at least one element in the code to replace the div
     template : '<td><i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> Checking</td>',
 
     link: function(scope, element, attrs) {
       scope.$watch('wikidata', function(wikidata) {
         console.log('wikidata changed');
-        if (wikidata !== undefined) {          
+        if (wikidata !== undefined) {
           if (wikidata && wikidata.id) {
             element.html('<a href="https://wikidata.org/wiki/Q' + wikidata.id + '">Q' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
           } else {
@@ -223,7 +223,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       });
     }
 
-    
+
 
     function queryWd() {
       console.log('Query WD');
@@ -271,7 +271,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     console.log('Task done, left: ' + tasksLeft);
     if (tasksLeft <= 0) $scope.busy = false;
   }
- 
+
   // Query Bibsys
   $http.get('api.php?id=' + $scope.id)
    .success(function(response) {
@@ -297,7 +297,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   }, function() {
     $scope.wdBusy = false;
     $scope.wikidata = null;
-    taskDone();    
+    taskDone();
   });
 
   $scope.morePublications = function() {
@@ -334,8 +334,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   $scope.biblioTimer = 0;
   $scope.viafTimer = 0;
   $scope.wdTimer = 0;
-  upTimer();  
- 
+  upTimer();
+
 }]);
 
 angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 250);

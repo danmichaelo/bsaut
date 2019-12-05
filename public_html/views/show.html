@@ -1,120 +1,120 @@
 <h2>
-	{{record.label ? record.label : id }}
+  {{record.label ? record.label : id }}
 </h2>
 
 <div class="row header">
-	<h3 class="col-sm-6">Bibsys authority record</h3>
-	<div class="col-sm-6 h3r">
-		<i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'BIBSYS authority query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
-    </div>
+  <h3 class="col-sm-6">Bibsys authority record</h3>
+  <div class="col-sm-6 h3r">
+    <i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'BIBSYS authority query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
+  </div>
 </div>
-    <div style="font-size:80%;">
-        <a href="https://authority.bibsys.no/authority/rest/sru?version=1.2&operation=searchRetrieve&startRecord=1&maximumRecords=1&query=rec.identifier%3D%22{{ record.id }}%22&recordSchema=marcxchange">
-        View source (MARC/XML)
-    </a>
-    </div>
+<div style="font-size:80%;">
+  <a href="https://authority.bibsys.no/authority/rest/sru?version=1.2&operation=searchRetrieve&startRecord=1&maximumRecords=1&query=rec.identifier%3D%22{{ record.id }}%22&recordSchema=marcxchange">
+    View source (MARC/XML)
+  </a>
+</div>
 <table class="table">
-	<tr>
-		<th style="width:25%">
-			Record type
-		</th>
-		<td>
-            {{record.class}}
-		</td>
-	</tr>
-	<tr>
-		<th style="width:25%">
-			ID
-		</th>
-		<td>
-            {{record.id}}
-		</td>
-	</tr>
-	<tr>
-		<th>
-			Name
-		</th>
-		<td>
-			{{record.name}}
-		</td>
-	</tr>
-	<tr>
-		<th>
-			Alternative names
-		</th>
-        <td>
-            <div ng-repeat="name in record.altLabels">
-                {{name}}
-            </div>
-		</td>
-	</tr>
-	<tr ng-show="record.birth">
-		<th>
-			Birth
-		</th>
-		<td>
-			{{record.birth}} 
-		</td>
-	</tr>
-	<tr ng-show="record.death">
-		<th>
-			Death
-		</th>
-		<td>
-			{{record.death}}
-		</td>
-	</tr>
-	<tr ng-show="record.genders">
-		<th>
-			Gender
-		</th>
-		<td>
-			{{record.genders}}
-		</td>
-	</tr>
+  <tr>
+    <th style="width:25%">
+      Record type
+    </th>
+    <td>
+      {{record.class}}
+    </td>
+  </tr>
+  <tr>
+    <th style="width:25%">
+      ID
+    </th>
+    <td>
+      {{record.id}}
+    </td>
+  </tr>
+  <tr>
+    <th>
+      Name
+    </th>
+    <td>
+      {{record.name}}
+    </td>
+  </tr>
+  <tr>
+    <th>
+      Alternative names
+    </th>
+    <td>
+      <div ng-repeat="name in record.altLabels">
+        {{name}}
+      </div>
+    </td>
+  </tr>
+  <tr ng-show="record.birth">
+    <th>
+      Birth
+    </th>
+    <td>
+      {{record.birth}}
+    </td>
+  </tr>
+  <tr ng-show="record.death">
+    <th>
+      Death
+    </th>
+    <td>
+      {{record.death}}
+    </td>
+  </tr>
+  <tr ng-show="record.genders">
+    <th>
+      Gender
+    </th>
+    <td>
+      {{record.genders}}
+    </td>
+  </tr>
 </table>
 
 
 <div class="row header">
-	<h3 class="col-sm-6">Connected services</h3>
-	<div class="col-sm-6 h3r">
-		VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
-		WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
-	</div>
+  <h3 class="col-sm-6">Connected services</h3>
+  <div class="col-sm-6 h3r">
+    VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
+    WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
+  </div>
 </div>
 
 <table class="table">
-	<tr>
-		<th style="width:25%">
-			VIAF
-		</th>
-		<td viaf-link>
-		</td>
-	</tr>
-	<tr>
-		<th>
-			Wikidata-ID
-		</th>
-		<td wd-link>
-		</td>
-	</tr>
+  <tr>
+    <th style="width:25%">
+      VIAF
+    </th>
+    <td viaf-link>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      Wikidata-ID
+    </th>
+    <td wd-link>
+    </td>
+  </tr>
 </table>
 
 <div class="row header">
-	<h3 class="col-sm-7">Bibliographic records from Bibsys</h3>
-	<div class="col-sm-5 h3r">
-		<i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i> {{publications.length ? publications.length + ' bibliographic records fetched' : 'Waiting'}}
-	</div>
+  <h3 class="col-sm-7">Bibliographic records from Bibsys</h3>
+  <div class="col-sm-5 h3r">
+    <i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i> {{publications.length ? publications.length + ' bibliographic records fetched' : 'Waiting'}}
+  </div>
 </div>
 
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
-	<li ng-repeat="pub in publications">
-		<a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
-			{{pub.title}} {{pub.subtitle}} {{pub.year}}
-		</a>
-	</li>
+  <li ng-repeat="pub in publications">
+    <a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
+      {{pub.title}} {{pub.subtitle}} {{pub.year}}
+    </a>
+  </li>
 </ul>
 
 <div ng-show="biblioBusy">
-	<i class="fa fa-cog fa-spin"></i> Fetching records, hold on…
+  <i class="fa fa-cog fa-spin"></i> Fetching records, hold on…
 </div>

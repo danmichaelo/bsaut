@@ -8,7 +8,6 @@ use Scriptotek\Sru\Client as SruClient;
 
 class IsniParser
 {
-    
     function parse($dom)
     {
         $out = array();
@@ -51,9 +50,9 @@ if ($response->error) {
     exit;
 }
 $out = array(
-	'url' => $url,
+    'url' => $url,
     'numberOfRecords' => $response->numberOfRecords,
-	'records' => array(),
+    'records' => array(),
     'nextRecordPosition' => $response->nextRecordPosition,
 );
 
@@ -62,7 +61,7 @@ foreach ($response->records as $record) {
     // xpath union not supported for some reason
     $el = $record->data->first('responseRecord');
 
-	$out['records'][] = $p->parse($el);
+    $out['records'][] = $p->parse($el);
 }
 
 //header('Access-Control-Allow-Origin: *');

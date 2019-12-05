@@ -6,5 +6,5 @@
         "illuminate/support": "5.2.45"
     },
     "minimum-stability": "dev",
-"prefer-stable": true
+    "prefer-stable": true
 }
