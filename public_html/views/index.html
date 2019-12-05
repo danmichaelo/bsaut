@@ -2,9 +2,22 @@
   <i class="fa fa-cog fa-spin" ng-show="busy"></i>
   Hold on, Bibsys is working hard to process your search
 </div>
-<div ng-show="!busy && numberOfRecords == -1">
-  Attempted human-friendly interface for searching Bibsys person authorities.
-  Right-truncated by default.
+<div ng-show="!busy && numberOfRecords == -1" style="font-size: 120%; padding-top:2em;">
+  <p>
+    This tool provides a human-friendly interface for searching
+    the Norwegian authority file
+    <em>
+      <a href="https://kunnskapsbase.bibliotekutvikling.no/ressurser/kunnskapsorganisering/verktoykasse-for-kunnskapsorganisering/autoritetsregister-for-personer-og-korporasjoner/" lang="nb">Felles autoritetsregister</a>
+    </em> (formerly known as Bibsys authorities, BARE)
+    through the <a href="https://authority.bibsys.no/authority/">API provided by Unit</a> (formerly Bibsys).
+  </p>
+  <p>
+    It can be used to locate or validate
+    <a href="https://www.wikidata.org/wiki/Property:P1015">P1015</a> values on Wikidata.
+  </p>
+  <p>
+    The search is right-truncated by default.
+  </p>
 </div>
 <div ng-show="!busy">
   <div ng-if="records.length < numberOfRecords">
