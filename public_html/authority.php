@@ -15,11 +15,14 @@ abstract class SearchProvider
 		curl_setopt_array($curl, array(
 			CURLOPT_RETURNTRANSFER => 1,
 			CURLOPT_URL => $url,
-			CURLOPT_POST => is_null($data) ? 0 : 1,
-			CURLOPT_POSTFIELDS => $data,
+			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_FAILONERROR => true,
-			CURLOPT_USERAGENT => 'TODO',
+			CURLOPT_USERAGENT => 'AuthoritySuggester tool',
 		));
+		if (!is_null($data)) {
+			curl_setopt(CURLOPT_POSTFIELDS, $data);
+			curl_setopt(CURLOPT_POST, 1);
+		}
 		$response = curl_exec($curl);
 		if (!$response){
 			fail('Failed to get ' . $url . ', error: "' . curl_error($curl) . '" - code: ' . curl_errno($curl));
@@ -52,7 +55,7 @@ class Bibsys extends SearchProvider
 			return [
 				'id' => $result->id,
 				'label' => $result->name,
-				'aliases' => $result->altLabels,
+				'aliases' => implode(', ', $result->altLabels),
 				'description' => $desc,
 			];
 		}, $data->records);
