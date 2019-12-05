@@ -10,7 +10,7 @@
   <div ng-if="records.length < numberOfRecords">
     Showing {{ records.length }} of {{ numberOfRecords }} record(s) found:
   </div>
-  <div ng-if="records.length >= numberOfRecords">
+  <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords">
     {{ records.length }} record(s) found:
   </div>
 </div>

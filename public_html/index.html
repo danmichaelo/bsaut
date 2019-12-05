@@ -27,18 +27,18 @@
           <a class="navbar-brand" href="./">Search Bibsys authority records</a>
         </div>
 
-        <form class="navbar-form" role="search" ng-submit="submit()" ng-controller="SearchFormCtrl">
-          <div class="form-group" style="display:inline;">
+        <form role="search" ng-submit="submit()" ng-controller="SearchFormCtrl" style="display:flex; padding-top: 8px" >
 
-            <div class="input-group" style="display: table;">
-              <input type="text" class="form-control" placeholder="Person or organization" ng-model="query" autofocus>
-              <span class="input-group-btn" style="width:1%;">
-                <button class="btn btn-default" type="submit">
-                  <span class="glyphicon glyphicon-search"></span> Search
-                </button>
-              </span>
-            </div><!-- /input-group -->
-          </div><!-- /form-group -->
+            <select style="flex: 0 1 140px"
+              ng-options="item as item.label for item in scopes track by item.id"
+              ng-model="selectedScope"></select>
+
+            <input  style="flex: 1 1 auto" type="text" class="form-control" placeholder="Person or organization" ng-model="query" autofocus>
+
+            <button class="btn btn-default" type="submit">
+              <span class="glyphicon glyphicon-search"></span> Search
+            </button>
+
         </form>
 
       </div><!-- /.container-fluid -->

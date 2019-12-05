@@ -10,7 +10,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       templateUrl: 'views/index.html',
       controller : 'SearchResultsCtrl'
     })
-    .when('/search/:query', {
+    .when('/search', {
       templateUrl: 'views/index.html',
       controller : 'SearchResultsCtrl'
     })
@@ -34,7 +34,9 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   this.busy = false;
   this.canceler = null;
 
-  this.searchBibsys = function(query, startPos) {
+  this.searchBibsys = function(query, queryScope, startPos) {
+
+    // TODO: queryScope
 
     if (that.canceler) {
       console.log('Aborting');
@@ -47,7 +49,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     $rootScope.$broadcast('searchStart', query);
     $http({
       method: 'GET',
-      url: 'api.php?q=' + query + '&start=' + startPos,
+      url: 'api.php?q=' + query + '&start=' + startPos + '&scope=' + queryScope,
       timeout: that.canceler
     })
     .then(function(response) {
@@ -62,12 +64,14 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 }])
 
 .controller('SearchResultsCtrl', ['$scope', '$routeParams', 'ApiService', function($scope, $routeParams, ApiService) {
+  console.log($routeParams);
 
   var nextRecordPosition = 1;
   $scope.busy = false;
   $scope.records = [];
   $scope.numberOfRecords = -1;
-  $scope.query = $routeParams.query;
+  $scope.query = $routeParams.q;
+  $scope.queryScope = $routeParams.scope;
 
   $scope.$on('requestStart', function() {
     $scope.busy = true;
@@ -89,8 +93,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       return;
     }
     if ($scope.query) {
-      console.log('Get more records from ', nextRecordPosition);
-      ApiService.searchBibsys($scope.query, nextRecordPosition);
+      console.log('Get more records from ', nextRecordPosition, 'scope: ', $scope.queryScope);
+      ApiService.searchBibsys($scope.query, $scope.queryScope, nextRecordPosition);
     }
   };
 
@@ -101,14 +105,42 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   $scope.busy = false;
   $scope.query = $routeParams.query;
   $scope.query = '';
+  $scope.scopes = [
+    {
+      id: 'everything',
+      label: 'Everything',
+    },
+    {
+      id: 'persons',
+      label: 'Persons',
+    },
+    {
+      id: 'corporations',
+      label: 'Corporations',
+    },
+    {
+      id: 'conferences',
+      label: 'Conferences',
+    },
+  ];
+  $scope.selectedScope = $scope.scopes[0];
+  console.log($location.search().scope)
+  if ($location.search().scope) {
+    $scope.scopes.forEach(c => {
+      console.log(c, $location.search().scope)
+      if (c.id == $location.search().scope) $scope.selectedScope = c;
+    })
+  }
 
   $scope.submit = function() {
-    $location.path('/search/' + $scope.query);
+    $location
+      .path('/search')
+      .search('scope', $scope.selectedScope.id)
+      .search('q', $scope.query);
   };
 
   $scope.$on('searchStart', function(e, query) {
-    console.log('Search start');
-    console.log(query);
+    console.log('Search start', query);
     $scope.query = query;
   });
 

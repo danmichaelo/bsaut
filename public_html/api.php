@@ -65,6 +65,16 @@ if (isset($_GET['id'])) {
     $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $q = $_GET['q'];
+
+    $scope = isset($_GET['scope']) ? $_GET['scope'] : 'everything';
+    $validScopes = [
+        'everything' => 'cql.allIndexes',
+        'persons' => 'bib.namePersonal',
+        'corporations' => 'bib.nameCorporate',
+        'conferences' => 'bib.nameConference',
+    ];
+    $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : 'cql.allIndexes';
+
     $m = preg_match('/^([^,]+) ([^, ]+)$/', $q, $matches);
     if ($m) {
         $q = $matches[2] . ', ' . $matches[1];
@@ -73,7 +83,7 @@ if (isset($_GET['id'])) {
     if ($m) {
         $query = 'rec.identifier="' . $q . '"';
     } else {
-        $query = 'cql.allIndexes="' . $q . '*"';
+        $query = $scope . '="' . $q . '*"';
     }
 
     $limit = 25;
