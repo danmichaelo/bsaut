@@ -34,7 +34,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   this.busy = false;
   this.canceler = null;
 
-  this.searchBibsys = function(query) {
+  this.searchBibsys = function(query, startPos) {
 
     if (that.canceler) {
       console.log('Aborting');
@@ -47,7 +47,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     $rootScope.$broadcast('searchStart', query);
     $http({
       method: 'GET',
-      url: 'api.php?q=' + query,
+      url: 'api.php?q=' + query + '&start=' + startPos,
       timeout: that.canceler
     })
     .then(function(response) {
@@ -63,9 +63,10 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
 .controller('SearchResultsCtrl', ['$scope', '$routeParams', 'ApiService', function($scope, $routeParams, ApiService) {
 
+  var nextRecordPosition = 1;
   $scope.busy = false;
   $scope.records = [];
-  $scope.stat = ''
+  $scope.numberOfRecords = -1;
   $scope.query = $routeParams.query;
 
   $scope.$on('requestStart', function() {
@@ -77,16 +78,21 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   });
 
   $scope.$on('searchResults', function(e, results) {
-    console.log('Got results', results);
-    $scope.records = results.records;
-    $scope.stat = results.numberOfRecords > results.records.length
-      ? 'Showing ' + results.records.length + ' of ' + results.numberOfRecords + ' record(s) found'
-      : results.records.length + ' record(s) found';
+    $scope.records = $scope.records.concat(results.records);
+    $scope.numberOfRecords = results.numberOfRecords;
+    nextRecordPosition = results.nextRecordPosition;
+    console.log('Got ', results.records.length, ' recs in this batch, total: ', $scope.records.length, 'recs');
   });
 
-  if ($scope.query) {
-    ApiService.searchBibsys($scope.query);
-  }
+  $scope.moreRecords = function () {
+    if ($scope.busy || ! nextRecordPosition) {
+      return;
+    }
+    if ($scope.query) {
+      console.log('Get more records from ', nextRecordPosition);
+      ApiService.searchBibsys($scope.query, nextRecordPosition);
+    }
+  };
 
 }])
 
