@@ -10,6 +10,12 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       templateUrl: 'views/index.html',
       controller : 'SearchResultsCtrl'
     })
+    .when('/search/:query', {
+      redirectTo: function(routeParams) {
+        console.log(routeParams);
+        return '/search?scope=everything&q=' + routeParams.query;
+      }
+    })
     .when('/search', {
       templateUrl: 'views/index.html',
       controller : 'SearchResultsCtrl'
