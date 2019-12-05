@@ -99,6 +99,26 @@ class Geonames extends SearchProvider
 }
 
 // ----------------------------------------------------------------------------
+// File: providers/Viaf.php
+class Viaf extends SearchProvider
+{
+	public function search($value)
+	{
+		$data = $this->getJson('http://www.viaf.org/viaf/AutoSuggest', [
+			'query' => $value,
+        ]);
+		return array_map(function($result) {
+			$desc = $result->fcodeName . ' in ' . $result->countryName;
+			return [
+				'id' => $result->recordID,
+				'label' => $result->displayForm,
+				'description' => 'Type: ' . $result->nametype,
+			];
+		}, $data->result);
+	}
+}
+
+// ----------------------------------------------------------------------------
 function json($arr) {
 	header('Content-type: application/json; charset=utf-8');
 	echo json_encode($arr, JSON_PRETTY_PRINT);
@@ -113,7 +133,8 @@ function search($property, $value) {
 
 	$providers = [
 		'P1015' => Bibsys::class,
-		'P1566' => Geonames::class
+		'P1566' => Geonames::class,
+		'P214' => Viaf::class,
 	];
 
 	if (!isset($providers[$property])) {
