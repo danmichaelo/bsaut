@@ -50,11 +50,11 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       url: 'api.php?q=' + query,
       timeout: that.canceler
     })
-    .success(function(response) {
-      $rootScope.$broadcast('searchResults', response);
+    .then(function(response) {
+      $rootScope.$broadcast('searchResults', response.data);
       $rootScope.$broadcast('requestFinish');
      })
-    .error(function() {
+    .catch(function() {
       $rootScope.$broadcast('requestFinish');
      });
   };
@@ -76,12 +76,12 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     $scope.busy = false;
   });
 
-  $scope.$on('searchResults', function(e, response) {
-    console.log('Got results');
-    $scope.records = response.records;
-    $scope.stat = response.numberOfRecords > response.records.length
-      ? 'Showing ' + response.records.length + ' of ' + response.numberOfRecords + ' record(s) found'
-      : response.records.length + ' record(s) found';
+  $scope.$on('searchResults', function(e, results) {
+    console.log('Got results', results);
+    $scope.records = results.records;
+    $scope.stat = results.numberOfRecords > results.records.length
+      ? 'Showing ' + results.records.length + ' of ' + results.numberOfRecords + ' record(s) found'
+      : results.records.length + ' record(s) found';
   });
 
   if ($scope.query) {
@@ -185,17 +185,17 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           callback: 'JSON_CALLBACK'
         }
       })
-      .error(function(response, status, headers, config) {
-        deferred.reject(status);
+      .catch(function(response) {
+        deferred.reject(response.status);
       })
-      .success(function(response) {
+      .then(function(response) {
 
-        if (response.items.length == 0) {
+        if (response.data.items.length == 0) {
           deferred.resolve(data);
           return;
         }
 
-        data.id = response.items[0];
+        data.id = response.data.items[0];
         queryWd()
       });
     }
@@ -209,16 +209,16 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           sparql: id
         }
       })
-      .error(function(response, status, headers, config) {
-        deferred.reject(status);
+      .catch(function(response) {
+        deferred.reject(response.status);
       })
-      .success(function(response) {
+      .then(function(response) {
 
-        if (response.items.length == 0) {
+        if (response.data.items.length == 0) {
           deferred.resolve(data);
           return;
         }
-        data.id = response.items[0].split('Q')[1];
+        data.id = response.data.items[0].split('Q')[1];
         queryWd()
       });
     }
@@ -238,10 +238,10 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           callback: 'JSON_CALLBACK'
         }
       })
-      .error(function(response, status, headers, config) {
-        deferred.reject(status);
+      .catch(function(response) {
+        deferred.reject(response.status);
       })
-      .success(function(response) {
+      .then(function(response) {
         // TODO
         deferred.resolve(data);
       });
@@ -274,19 +274,19 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
   // Query Bibsys
   $http.get('api.php?id=' + $scope.id)
-   .success(function(response) {
-    $scope.record = response.numberOfRecords ? response.records[0] : false;
-    $scope.authorityBusy = false;
-    taskDone();
-   });
+    .then(function(response) {
+      $scope.record = response.data.numberOfRecords ? response.data.records[0] : false;
+      $scope.authorityBusy = false;
+      taskDone();
+    });
 
   // Query VIAF
   $http.get('api.php?viaf=' + $scope.id)
-   .success(function(response) {
-    $scope.viaf = response.numberOfRecords ? response.records[0] : false;
-    $scope.viafBusy = false;
-    taskDone();
-   });
+    .then(function(response) {
+      $scope.viaf = response.data.numberOfRecords ? response.data.records[0] : false;
+      $scope.viafBusy = false;
+      taskDone();
+    });
 
   // Query Wikidata
   WikidataService.fromBibsysId($scope.id).then(function(data) {
@@ -308,11 +308,11 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
     $scope.biblioBusy = true;
     $http.get('api.php?pub=' + $scope.id + '&start=' + nextRecordPosition)
-     .success(function(response) {
-      $scope.publications = $scope.publications.concat(response.records);
-      nextRecordPosition = response.nextRecordPosition;
-      $scope.biblioBusy = false;
-     });
+      .then(function(response) {
+        $scope.publications = $scope.publications.concat(response.data.records);
+        nextRecordPosition = response.data.nextRecordPosition;
+        $scope.biblioBusy = false;
+       });
   };
 
   $scope.publications = [];
