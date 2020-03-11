@@ -33,6 +33,49 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
 })
 
+.service('ScopesService', [function () {
+
+  this.items = [
+    {
+      id: 'everything',
+      label: 'Everything',
+      viafSearchField: 'local.names',
+    },
+    {
+      id: 'persons',
+      label: 'Persons',
+      viafSearchField: 'local.personalNames',
+    },
+    {
+      id: 'corporations',
+      label: 'Corporations',
+      viafSearchField: 'local.corporateNames',
+    },
+    {
+      id: 'conferences',
+      label: 'Conferences',
+      viafSearchField: 'local.names',
+    },
+  ];
+
+  this.get = () => {
+    return this.items;
+  }
+
+  this.find = (value) => {
+    if (!value) {
+      return this.items[0];
+    }
+    for (let idx = 0; idx < this.items.length; idx++) {
+      if (this.items[idx].id == value) {
+        return this.items[idx]
+      }
+    }
+    return this.items[0];
+  }
+
+}])
+
 .service('ApiService', ['$rootScope', '$http', '$q', function($rootScope, $http, $q) {
 
   var that = this;
@@ -69,7 +112,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
 }])
 
-.controller('SearchResultsCtrl', ['$scope', '$routeParams', 'ApiService', function($scope, $routeParams, ApiService) {
+.controller('SearchResultsCtrl', ['$location', '$scope', '$routeParams', 'ApiService', 'ScopesService', function($location, $scope, $routeParams, ApiService, ScopesService) {
   console.log($routeParams);
 
   var nextRecordPosition = 1;
@@ -77,7 +120,12 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   $scope.records = [];
   $scope.numberOfRecords = -1;
   $scope.query = $routeParams.q;
+  $scope.queryEncoded = encodeURIComponent($routeParams.q);
   $scope.queryScope = $routeParams.scope;
+
+  const selectedScope = ScopesService.find($location.search().scope);
+  $scope.viafSearchField = selectedScope.viafSearchField;
+
 
   $scope.$on('requestStart', function() {
     $scope.busy = true;
@@ -106,37 +154,14 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
 }])
 
-.controller('SearchFormCtrl', ['$scope', '$routeParams', '$location', function($scope, $routeParams, $location, ApiService) {
+.controller('SearchFormCtrl', ['$scope', '$routeParams', '$location', 'ScopesService', function($scope, $routeParams, $location, ScopesService) {
 
   $scope.busy = false;
   $scope.query = $routeParams.query;
   $scope.query = '';
-  $scope.scopes = [
-    {
-      id: 'everything',
-      label: 'Everything',
-    },
-    {
-      id: 'persons',
-      label: 'Persons',
-    },
-    {
-      id: 'corporations',
-      label: 'Corporations',
-    },
-    {
-      id: 'conferences',
-      label: 'Conferences',
-    },
-  ];
-  $scope.selectedScope = $scope.scopes[0];
-  console.log($location.search().scope)
-  if ($location.search().scope) {
-    $scope.scopes.forEach(c => {
-      console.log(c, $location.search().scope)
-      if (c.id == $location.search().scope) $scope.selectedScope = c;
-    })
-  }
+  $scope.scopes = ScopesService.get();
+
+  $scope.selectedScope = ScopesService.find($location.search().scope);
 
   $scope.submit = function() {
     $location
