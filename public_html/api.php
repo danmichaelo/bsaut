@@ -212,8 +212,4 @@ foreach ($response->records as $record) {
     $out['records'][] = $x->toArray();
 }
 
-if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-    echo json_encode($out, JSON_PRETTY_PRINT);
-} else {
-    echo json_encode($out);
-}
+echo json_encode($out, JSON_PRETTY_PRINT);
