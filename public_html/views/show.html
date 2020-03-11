@@ -2,7 +2,7 @@
   {{record.label ? record.label : id }}
 </h2>
 
-<div ng-if="!record.id">
+<div ng-if="!authorityBusy && !record.id">
   <div class="alert alert-danger">
     Bibsys authority record not found
   </div>
@@ -84,7 +84,7 @@
 
 
   <div class="row header">
-    <h3 class="col-sm-6">Connected services</h3>
+    <h3 class="col-sm-6">Linked registries</h3>
     <div class="col-sm-6 h3r">
       VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
       WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
