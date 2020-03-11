@@ -43,6 +43,11 @@ class ViafParser
     }
 }
 
+if (isset($_GET['origin'])) {
+    header('Access-Control-Allow-Origin: *');
+}
+header('Content-type: application/json; charset=utf-8');
+
 $extras = array();
 
 $start = isset($_GET['start'])
@@ -171,7 +176,16 @@ $client = new SruClient($url, array(
     'user-agent' => 'BsAutSearch/0.1'
 ));
 
-$response = $client->search($query, $start, $limit, $extras);
+try {
+    $response = $client->search($query, $start, $limit, $extras);
+} catch (\GuzzleHttp\Exception\BadResponseException $ex) {
+    http_response_code($ex->getResponse()->getStatusCode());
+    echo json_encode([
+        'error' => strval($ex),
+        'status_code' => $ex->getResponse()->getStatusCode(),
+    ], JSON_PRETTY_PRINT);
+    exit;
+}
 $url = $client->urlTo($query, $start, $limit, $extras);
 //if ($response->error) {
 //    echo json_encode(array(
@@ -198,10 +212,6 @@ foreach ($response->records as $record) {
     $out['records'][] = $x->toArray();
 }
 
-if (isset($_GET['origin'])) {
-    header('Access-Control-Allow-Origin: *');
-}
-header('Content-type: application/json; charset=utf-8');
 if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
     echo json_encode($out, JSON_PRETTY_PRINT);
 } else {

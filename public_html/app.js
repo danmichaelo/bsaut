@@ -102,10 +102,17 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       timeout: that.canceler
     })
     .then(function(response) {
-      $rootScope.$broadcast('searchResults', response.data);
+      console.log(response.status)
+      if (response.status != 200) {
+        console.log('Search failed')
+        $rootScope.$broadcast('searchFailed', response.data);
+      } else {
+        $rootScope.$broadcast('searchResults', response.data);
+      }
       $rootScope.$broadcast('requestFinish');
      })
     .catch(function() {
+      $rootScope.$broadcast('searchFailed');
       $rootScope.$broadcast('requestFinish');
      });
   };
@@ -142,12 +149,19 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     console.log('Got ', results.records.length, ' recs in this batch, total: ', $scope.records.length, 'recs');
   });
 
+  $scope.$on('searchFailed', function(e, results) {
+    console.log('Search failed');
+    $scope.records = [];
+    $scope.error = 'Search failed';
+  });
+
   $scope.moreRecords = function () {
-    if ($scope.busy || ! nextRecordPosition) {
+    if ($scope.busy || ! nextRecordPosition || $scope.error) {
       return;
     }
     if ($scope.query) {
       console.log('Get more records from ', nextRecordPosition, 'scope: ', $scope.queryScope);
+      $scope.error = null;
       ApiService.searchBibsys($scope.query, $scope.queryScope, nextRecordPosition);
     }
   };
