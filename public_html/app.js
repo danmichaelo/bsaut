@@ -358,7 +358,14 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   // Query Bibsys
   $http.get('api.php?id=' + $scope.id)
     .then(function(response) {
-      $scope.record = response.data.numberOfRecords ? response.data.records[0] : false;
+      let record = response.data.numberOfRecords ? response.data.records[0] : false;
+      if (record && record.altLabels) {
+        record.altLabels = record.altLabels.filter(function (value, index, self) {
+          // Only unique
+          return self.indexOf(value) === index;
+        })
+      }
+      $scope.record = record;
       $scope.authorityBusy = false;
       taskDone();
     });
