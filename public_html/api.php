@@ -322,7 +322,7 @@ if (isset($_GET['id'])) {
     $schema = 'marcxml';
     $sru_version = '1.2';
     $url = 'https://bibsys-network.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK';
-    $query = 'alma.authority_id="(NO-TrBIB)' . $_GET['pub'] . '"';
+    $query = 'alma.authority_id="(NO-TrBIB)' . $_GET['pub'] . '" sortBy alma.main_pub_date/sort.descending';
     $limit = 25;
 
 // Lookup VIAF
