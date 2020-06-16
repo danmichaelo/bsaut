@@ -217,7 +217,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           if (viaf && viaf.id) {
             element.html('<a href="http://viaf.org/viaf/' + viaf.id + '/">' + viaf.id + '</a> : ' + viaf.mainHeadings.reduce(function(prev, cur) { return (prev ? prev + ' | ' : '') + cur.title; }, null) );
           } else {
-            element.html('<em>Record not connected to VIAF</em>');
+            element.html('<em>Record not linked to VIAF</em>');
           }
         }
       })
@@ -243,7 +243,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           if (wikidata && wikidata.id) {
             element.html('<a href="https://wikidata.org/wiki/Q' + wikidata.id + '">Q' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
           } else {
-            element.html('<em>Record not connected to Wikidata</em>');
+            element.html('<em>Record not linked from Wikidata</em>');
           }
         }
       })

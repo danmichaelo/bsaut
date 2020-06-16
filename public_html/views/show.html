@@ -13,7 +13,7 @@
   <div class="row header">
     <h3 class="col-sm-6">Bibsys authority record</h3>
     <div class="col-sm-6 h3r">
-      <i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'BIBSYS authority query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
+      <i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'Bibsys query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
     </div>
   </div>
   <div style="font-size:80%;">
@@ -24,7 +24,7 @@
   <table class="table">
     <tr>
       <th style="width:25%">
-        Record type
+        Record type:
       </th>
       <td>
         {{record.class}}
@@ -32,7 +32,7 @@
     </tr>
     <tr>
       <th style="width:25%">
-        ID
+        ID:
       </th>
       <td>
         {{record.id}}
@@ -40,7 +40,7 @@
     </tr>
     <tr>
       <th>
-        Name
+        Name:
       </th>
       <td>
         {{record.name}}
@@ -48,7 +48,7 @@
     </tr>
     <tr>
       <th>
-        Alternative names
+        Alternative names:
       </th>
       <td>
         <div ng-repeat="name in record.altLabels">
@@ -58,7 +58,7 @@
     </tr>
     <tr ng-show="record.birth">
       <th>
-        Birth
+        Birth:
       </th>
       <td>
         {{record.birth}}
@@ -66,25 +66,25 @@
     </tr>
     <tr ng-show="record.death">
       <th>
-        Death
+        Death:
       </th>
       <td>
         {{record.death}}
       </td>
     </tr>
-    <tr ng-show="record.genders">
+    <tr ng-show="record.gender">
       <th>
-        Gender
+        Gender:
       </th>
       <td>
-        {{record.genders}}
+        {{record.gender}}
       </td>
     </tr>
   </table>
 
 
   <div class="row header">
-    <h3 class="col-sm-6">Linked registries</h3>
+    <h3 class="col-sm-6">Links</h3>
     <div class="col-sm-6 h3r">
       VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
       WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
@@ -93,17 +93,17 @@
 
   <table class="table">
     <tr>
-      <th style="width:25%">
-        VIAF
+      <th>
+        Wikidata:
       </th>
-      <td viaf-link>
+      <td wd-link>
       </td>
     </tr>
     <tr>
-      <th>
-        Wikidata-ID
+      <th style="width:25%">
+        VIAF:
       </th>
-      <td wd-link>
+      <td viaf-link>
       </td>
     </tr>
   </table>
@@ -112,7 +112,7 @@
 
 
 <div class="row header">
-  <h3 class="col-sm-7">Bibliographic records from Bibsys</h3>
+  <h3 class="col-sm-7">Bibliographic records in Oria</h3>
   <div class="col-sm-5 h3r">
     <i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i>
     <span ng-if="publications.length">
@@ -130,7 +130,7 @@
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
   <li ng-repeat="pub in publications">
     <a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
-      {{pub.title}} {{pub.subtitle}} {{pub.year}}
+      {{pub.creators[0].name}} ({{pub.year}}). <em>{{pub.title}}</em> <span ng-if="pub.electronic">(e-book)</span>
     </a>
   </li>
 </ul>
