@@ -1,9 +1,11 @@
 {
     "require": {
-        "scriptotek/sru-client": "*",
-        "scriptotek/simplemarcparser": "dev-master",
+        "illuminate/support": "5.2.45",
         "rmccue/requests": ">=1.0",
-        "illuminate/support": "5.2.45"
+        "scriptotek/marc": "^2.1",
+        "scriptotek/sru-client": "^0.7.0",
+        "php-http/guzzle6-adapter": "^2.0",
+        "http-interop/http-factory-guzzle": "^1.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

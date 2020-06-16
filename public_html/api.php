@@ -4,13 +4,236 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 require_once('../vendor/autoload.php');
-use Scriptotek\Sru\Client as SruClient;
-use Scriptotek\SimpleMarcParser\AuthorityRecord;
-use Scriptotek\SimpleMarcParser\BibliographicRecord;
 
-class ViafParser
+use Carbon\Carbon;
+use Danmichaelo\QuiteSimpleXMLElement\QuiteSimpleXMLElement;
+use Scriptotek\Marc\Fields\Field;
+use Scriptotek\Marc\Record;
+use Scriptotek\Sru\Client as SruClient;
+
+
+class AuthorityRecord
 {
-    function __construct($dom)
+    /**
+     * @var array
+     */
+    private $data;
+
+    // http://www.loc.gov/marc/authority/ad008.html
+    public static $cat_rules = [
+        'a' => 'Earlier rules',
+        'b' => 'AACR 1',
+        'c' => 'AACR 2',
+        'd' => 'AACR 2 compatible',
+        'z' => 'Other',
+    ];
+
+    public static $vocabularies = [
+        'a' => 'lcsh',
+        'b' => 'lccsh', // LC subject headings for children's literature
+        'c' => 'mesh', // Medical Subject Headings
+        'd' => 'atg', // National Agricultural Library subject authority file (?)
+        'k' => 'cash', // Canadian Subject Headings
+        'r' => 'aat', // Art and Architecture Thesaurus
+        's' => 'sears', // Sears List of Subject Heading
+        'v' => 'rvm', // Répertoire de vedettes-matière
+    ];
+
+    function __construct(QuiteSimpleXMLElement $dom)
+    {
+        $record = Record::fromSimpleXMLElement($dom->el);
+        $data = [];
+
+        // 001: Control number
+        $data['id'] = $record->query('001')->text();
+
+        // 003: MARC code for the agency whose system control number is
+        // contained in field 001 (Control Number)
+        // See http://www.loc.gov/marc/authority/ecadorg.html
+        $data['agency'] = $record->query('003')->text();
+
+        // 005: Modified
+        $data['modified'] = $this->parseDateTime($record->query('005')->text())->format('Y-m-d');
+
+
+        // 008: Extract *some* information
+        $f008 = $record->query('008')->text();
+        $r = substr($f008, 10, 1);
+        $data['cataloging'] = isset(self::$cat_rules[$r]) ? self::$cat_rules[$r] : null;
+        $r = substr($f008, 11, 1);
+        $data['vocabulary'] = isset(self::$vocabularies[$r]) ? self::$vocabularies[$r] : null;
+
+        // 040:
+        $source = $record->getField('040');
+        if (!is_null($source)) {
+            $data['catalogingAgency'] = $source->sf('a');
+            $data['language'] = $source->sf('b');
+            $data['transcribingAgency'] = $source->sf('c');
+            $data['modifyingAgency'] = $source->sf('d');
+            $data['vocabulary'] = $source->sf('f') ?: $data['vocabulary'];
+        }
+
+        // 1X0: Name
+        $nameField = $record->getField('1.0', true);
+        $this->parse1xxField($data, $nameField);
+
+        // 375: Gender (R)
+        if ($data['class'] == 'person') {
+            $data['genders'] = [];
+            foreach ($record->getFields('375') as $field) {
+                $gendermap = [
+                    'm' => 'male',
+                    'f' => 'female',
+                ];
+                $value = isset($gendermap[$field->sf('a')]) ? $gendermap[$field->sf('a')] : $field->sf('a');
+                $data['genders'][] = array(
+                    'value' => $value,
+                    'from' => $field->sf('s'),
+                    'until' => $field->sf('e'),
+                );
+            }
+            // Alias gender to the last value to make utilizing easier
+            $data['gender'] = (count($data['genders']) > 0)
+                ? $data['genders'][count($data['genders']) - 1]['value']  // assume sane ordering for now
+                : null;
+        }
+
+        // 4X0: See From Tracing
+        foreach ($record->getFields('4.0', true) as $field) {
+            $data['altLabels'][] = $field->sf('a');
+        }
+
+        $this->data = $data;
+    }
+
+    public function toArray() {
+        return $this->data;
+    }
+
+    /**
+     * Parse a *Representation of Dates and Times* (ISO 8601).
+     * The date requires 8 numeric characters in the pattern yyyymmdd.
+     * The time requires 8 numeric characters in the pattern hhmmss.f,
+     * expressed in terms of the 24-hour (00-23) clock.
+     *
+     * @param string $value
+     *
+     * @return Carbon|null
+     */
+    protected function parseDateTime($value)
+    {
+        if (strlen($value) == 6) {
+            return Carbon::createFromFormat('ymdHis', $value . '000000');
+        }
+        if (strlen($value) == 8) {
+            return Carbon::createFromFormat('YmdHis', $value . '000000');
+        }
+        if (strlen($value) == 16) {
+            return Carbon::createFromFormat('YmdHis', substr($value, 0, 14));
+        } // skip decimal fraction
+    }
+
+    private function normalizeName($value)
+    {
+        $spl = explode(', ', $value);
+        if (count($spl) == 2) {
+            return $spl[1] . ' ' . $spl[0];
+        }
+        return $value;
+    }
+
+    private function parse1xxField(array &$data, Field $nameField)
+    {
+        $sf_a = $nameField->sf('a');
+        $sf_b = $nameField->sf('b');
+        $sf_d = $nameField->sf('d');
+
+        $data['label'] = $sf_a;
+
+        switch ($nameField->getTag()) {
+
+            case '100':
+                $data['class'] = 'person';
+                $data['name'] = $data['label'];
+                if ($nameField->getIndicator(1) === '1') {  // Surnames
+                    $data['label'] = $this->normalizeName($data['label']);
+                }
+                if (!empty($sf_b)) {
+                    $data['label'] .= ' ' . $sf_b;
+                }
+                $bd = explode('-', $sf_d);
+                $data['birth'] = $bd[0] ?: null;
+                $data['death'] = (count($bd) > 1 && $bd[1]) ? $bd[1] : null;
+                break;
+
+            case '110':
+                $data['class'] = 'corporation';
+                if ($nameField->getIndicator(1) === '0') {  // Inverted name
+                    $data['label'] = $this->normalizeName($data['label']);
+                }
+                if (!empty($sf_b)) {
+                    $data['label'] .= ' : ' . $sf_b;
+                }
+                break;
+
+            case '111':
+                $data['class'] = 'meeting';
+                break;
+
+            case '130':
+                $data['class'] = 'title';
+                foreach ($nameField->getSubfields('d') as $sf) {
+                    $data['label'] .= ' (' . trim($sf->getData()) . ')';
+                }
+                break;
+
+            case '150':
+                $data['class'] = 'topical';
+                foreach ($nameField->getSubfields('[xvyz]', true) as $sf) {
+                    $data['label'] .= ' : ' . trim($sf->getData());
+                }
+                break;
+        }
+    }
+}
+
+
+class BibliographicRecord
+{
+    /**
+     * @var array
+     */
+    private $data;
+
+    function __construct(QuiteSimpleXMLElement $dom)
+    {
+        $record = Record::fromSimpleXMLElement($dom->el);
+        $data = [];
+        $data['id'] = $record->query('001')->text();
+
+        $data['title'] = $record->getTitle();
+        $data['publisher'] = $record->getPublisher();
+        $data['year'] = $record->getPubYear();
+        $data['creators'] = $record->getCreators();
+
+        $ldr = str_split($record->getLeader());
+        $f007 = str_split($record->query('007')->text());
+        $f008 = str_split($record->query('008')->text());
+
+        $data['electronic'] = ($f007[0] == 'c' && $f007[1] == 'r');
+
+        $this->data = $data;
+    }
+
+    public function toArray() {
+        return $this->data;
+    }
+}
+
+
+class ViafRecord
+{
+    function __construct(QuiteSimpleXMLElement $dom)
     {
 
         $out = array();
@@ -58,7 +281,7 @@ $sru_version = '1.1';
 
 // Lookup by id
 if (isset($_GET['id'])) {
-    $p = 'Scriptotek\SimpleMarcParser\AuthorityRecord';
+    $p = AuthorityRecord::class;
     $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $query = 'rec.identifier="' . $_GET['id'] . '"';
@@ -66,7 +289,7 @@ if (isset($_GET['id'])) {
 
 // Search by query
 } else if (isset($_GET['q'])) {
-    $p = 'Scriptotek\SimpleMarcParser\AuthorityRecord';
+    $p = AuthorityRecord::class;
     $url = 'https://authority.bibsys.no/authority/rest/sru';
     $schema = 'marcxchange';
     $q = $_GET['q'];
@@ -95,7 +318,7 @@ if (isset($_GET['id'])) {
 
 // Lookup publications by id
 } else if (isset($_GET['pub'])) {
-    $p = 'Scriptotek\SimpleMarcParser\BibliographicRecord';
+    $p = BibliographicRecord::class;
     $schema = 'marcxml';
     $sru_version = '1.2';
     $url = 'https://bibsys-network.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK';
@@ -104,7 +327,7 @@ if (isset($_GET['id'])) {
 
 // Lookup VIAF
 } else if (isset($_GET['viaf'])) {
-    $p = 'ViafParser';
+    $p = ViafRecord::class;
     $url = 'http://viaf.org/viaf/search';
     $schema = 'default'; // VIAF-XML
     $query = 'local.source="bibsys|' . $_GET['viaf'] . '"';
