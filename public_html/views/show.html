@@ -18,94 +18,96 @@
   </div>
   <div style="font-size:80%;">
     <a href="https://authority.bibsys.no/authority/rest/sru?version=1.2&operation=searchRetrieve&startRecord=1&maximumRecords=1&query=rec.identifier%3D%22{{ record.id }}%22&recordSchema=marcxchange">
-      View source (MARC/XML)
+      View source (MARC XML)
     </a>
   </div>
-  <table class="table">
-    <tr>
-      <th style="width:25%">
-        Record type:
-      </th>
-      <td>
-        {{record.class}}
-      </td>
-    </tr>
-    <tr>
-      <th style="width:25%">
-        ID:
-      </th>
-      <td>
-        {{record.id}}
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Name:
-      </th>
-      <td>
-        {{record.name}}
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Alternative names:
-      </th>
-      <td>
-        <div ng-repeat="name in record.altLabels">
-          {{name}}
-        </div>
-      </td>
-    </tr>
-    <tr ng-show="record.birth">
-      <th>
-        Birth:
-      </th>
-      <td>
-        {{record.birth}}
-      </td>
-    </tr>
-    <tr ng-show="record.death">
-      <th>
-        Death:
-      </th>
-      <td>
-        {{record.death}}
-      </td>
-    </tr>
-    <tr ng-show="record.gender">
-      <th>
-        Gender:
-      </th>
-      <td>
-        {{record.gender}}
-      </td>
-    </tr>
-    <tr ng-show="record.nationality || record.geo">
-      <th>
-        Nationality:
-      </th>
-      <td>
-        <div ng-show="record.nationality">{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
-        <div ng-show="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
-      </td>
-    </tr>
-    <tr ng-show="record.status">
-      <th>
-        Status:
-      </th>
-      <td>
-        <span ng-if="record.status == 'kat3'">
-          <i class="fa fa-star"></i>
-          National Library of Norway record (kat3)
-        </span>
-        <span ng-if="record.status == 'kat2'">
-          Normal concortium record (kat2)
-        </span>
-        <span ng-if="record.status == 'kat1'">
-          Draft record (kat1)
-        </span>
-      </td>
-    </tr>
+  <table class="table table-sm table-borderless table-striped">
+    <tbody>
+      <tr>
+        <th class="text-right text-muted" style="width: 25%">
+          Record type:
+        </th>
+        <td>
+          {{record.class}}
+        </td>
+      </tr>
+      <tr>
+        <th class="text-right text-muted">
+          ID:
+        </th>
+        <td>
+          {{record.id}}
+        </td>
+      </tr>
+      <tr>
+        <th class="text-right text-muted">
+          Name:
+        </th>
+        <td>
+          {{record.name}}
+        </td>
+      </tr>
+      <tr>
+        <th class="text-right text-muted">
+          Alternative names:
+        </th>
+        <td>
+          <div ng-repeat="name in record.altLabels">
+            {{name}}
+          </div>
+        </td>
+      </tr>
+      <tr ng-show="record.birth">
+        <th class="text-right text-muted">
+          Birth:
+        </th>
+        <td>
+          {{record.birth}}
+        </td>
+      </tr>
+      <tr ng-show="record.death">
+        <th class="text-right text-muted">
+          Death:
+        </th>
+        <td>
+          {{record.death}}
+        </td>
+      </tr>
+      <tr ng-show="record.gender">
+        <th class="text-right text-muted">
+          Gender:
+        </th>
+        <td>
+          {{record.gender}}
+        </td>
+      </tr>
+      <tr ng-show="record.nationality || record.geo">
+        <th class="text-right text-muted">
+          Nationality:
+        </th>
+        <td>
+          <div ng-show="record.nationality">{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
+          <div ng-show="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
+        </td>
+      </tr>
+      <tr ng-show="record.status">
+        <th class="text-right text-muted">
+          Status:
+        </th>
+        <td>
+          <span ng-if="record.status == 'kat3'">
+            <i class="fa fa-star"></i>
+            National Library of Norway record (kat3)
+          </span>
+          <span ng-if="record.status == 'kat2'">
+            Normal concortium record (kat2)
+          </span>
+          <span ng-if="record.status == 'kat1'">
+            Draft record (kat1)
+          </span>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
 
@@ -117,21 +119,23 @@
     </div>
   </div>
 
-  <table class="table">
-    <tr>
-      <th>
-        Wikidata:
-      </th>
-      <td wd-link>
-      </td>
-    </tr>
-    <tr>
-      <th style="width:25%">
-        VIAF:
-      </th>
-      <td viaf-link>
-      </td>
-    </tr>
+  <table class="table table-sm table-borderless table-striped">
+    <tbody>
+      <tr>
+        <th class="text-right text-muted" style="width: 25%">
+          Wikidata:
+        </th>
+        <td wd-link>
+        </td>
+      </tr>
+      <tr>
+        <th class="text-right text-muted">
+          VIAF:
+        </th>
+        <td viaf-link>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
 </div>

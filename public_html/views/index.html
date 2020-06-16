@@ -43,34 +43,38 @@
        infinite-scroll="moreRecords()"
        infinite-scroll-distance="0"
        infinite-scroll-disabled="busy"
-       class="table table-sm"
+       class="table table-sm table-borderless table-striped"
 >
-  <tr>
-    <th>
-      ID
-    </th>
-    <th>
-      Name
-    </th>
-    <th>
-      Type
-    </th>
-  </tr>
-  <tr ng-repeat="record in records">
-    <td>
-      <a href="show/{{record.id}}"><span class="text-muted text-sm">{{ record.id }}</span></a>
-    </td>
-    <td>
-      <a href="show/{{record.id}}">{{ record.name }}</a>
-      <span ng-show="record.birth || record.death">
-      ({{ record.birth }}-{{ record.death }})
-    </span>
-      <i class="fa fa-male" ng-show="record.gender == 'male'" title="Gender: male"></i>
-      <i class="fa fa-female" ng-show="record.gender == 'female'" title="Gender: female"></i>
-      <i class="fa fa-star" ng-show="record.status == 'kat3'" title="Nasjonalt autoritetsregister (kat3)"></i>
-    </td>
-    <td>
-      {{ record.class }}
-    </td>
-  </tr>
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Type
+      </th>
+      <th>
+        ID
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="record in records">
+      <td>
+        <a href="show/{{record.id}}">{{ record.name }}</a>
+        <span ng-show="record.birth || record.death">
+        ({{ record.birth }}-{{ record.death }})
+      </span>
+        <i class="fa fa-male" ng-show="record.gender == 'male'" title="Gender: male"></i>
+        <i class="fa fa-female" ng-show="record.gender == 'female'" title="Gender: female"></i>
+        <i class="fa fa-star" ng-show="record.status == 'kat3'" title="Nasjonalt autoritetsregister (kat3)"></i>
+      </td>
+      <td>
+        {{ record.class }}
+      </td>
+      <td>
+        <span>{{ record.id }}</span>
+      </td>
+    </tr>
+  </tbody>
 </table>
