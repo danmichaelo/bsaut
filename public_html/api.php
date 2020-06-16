@@ -315,15 +315,15 @@ if (isset($_GET['id'])) {
     ];
     $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : 'cql.allIndexes';
 
-    $m = preg_match('/^([^,]+) ([^, ]+)$/', $q, $matches);
-    if ($m) {
+    if (preg_match('/^([^,]+) ([^, ]+)$/', $q, $matches)) {
         $q = $matches[2] . ', ' . $matches[1];
     }
-    $m = preg_match('/^[0-9]+$/', $q);
-    if ($m) {
+    if (preg_match('/^[0-9]+$/', $q)) {
         $query = 'rec.identifier="' . $q . '"';
+    } elseif (preg_match('/^"(.*)"$/', $q, $matches)) {
+        $query = $scope . '="' . addslashes($q) . '"';
     } else {
-        $query = $scope . '="' . $q . '*"';
+        $query = $scope . '="' . addslashes($q) . '*"';
     }
 
     $limit = 25;
