@@ -74,8 +74,11 @@ class AuthorityRecord
         }
 
         // 1X0: Name
-        $nameField = $record->getField('1.0', true);
-        $this->parse1xxField($data, $nameField);
+        $data['class'] = 'unknown';
+        $nameField = $record->getField('1.0|111', true);
+        if (!is_null($nameField)) {
+            $this->parse1xxField($data, $nameField);
+        }
 
         // 375: Gender (R)
         if ($data['class'] == 'person') {
@@ -99,9 +102,12 @@ class AuthorityRecord
         }
 
         // 4X0: See From Tracing
-        foreach ($record->getFields('4.0', true) as $field) {
+        foreach ($record->getFields('4.0|411', true) as $field) {
             $data['altLabels'][] = $field->sf('a');
         }
+
+        // 901: Status
+        $data['status'] = $record->query('901$a')->text();
 
         $this->data = $data;
     }
@@ -174,23 +180,25 @@ class AuthorityRecord
                 if (!empty($sf_b)) {
                     $data['label'] .= ' : ' . $sf_b;
                 }
+                $data['name'] = $data['label'];
                 break;
 
             case '111':
                 $data['class'] = 'meeting';
+                if (!empty($sf_b)) {
+                    $data['label'] .= ' : ' . $sf_b;
+                }
+                $data['name'] = $data['label'];
                 break;
 
             case '130':
                 $data['class'] = 'title';
+                if (!empty($sf_b)) {
+                    $data['label'] .= ' : ' . $sf_b;
+                }
+                $data['name'] = $data['label'];
                 foreach ($nameField->getSubfields('d') as $sf) {
                     $data['label'] .= ' (' . trim($sf->getData()) . ')';
-                }
-                break;
-
-            case '150':
-                $data['class'] = 'topical';
-                foreach ($nameField->getSubfields('[xvyz]', true) as $sf) {
-                    $data['label'] .= ' : ' . trim($sf->getData());
                 }
                 break;
         }
