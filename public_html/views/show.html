@@ -52,6 +52,7 @@
           Alternative names:
         </th>
         <td>
+          <div v-if="!record.altLabels.length" class="text-muted">(None)</div>
           <div ng-repeat="name in record.altLabels">
             {{name}}
           </div>
@@ -59,7 +60,7 @@
       </tr>
       <tr ng-show="record.birth">
         <th class="text-right text-muted">
-          Birth:
+          Date of birth:
         </th>
         <td>
           {{record.birth}}
@@ -67,7 +68,7 @@
       </tr>
       <tr ng-show="record.death">
         <th class="text-right text-muted">
-          Death:
+          Date of death:
         </th>
         <td>
           {{record.death}}
@@ -100,7 +101,7 @@
             National Library of Norway record (kat3)
           </span>
           <span ng-if="record.status == 'kat2'">
-            Normal concortium record (kat2)
+            Normal consortium record (kat2)
           </span>
           <span ng-if="record.status == 'kat1'">
             Draft record (kat1)
