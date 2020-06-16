@@ -2,7 +2,7 @@
   <i class="fa fa-cog fa-spin" ng-show="busy"></i>
   Hold on, Bibsys is working hard to process your search
 </div>
-<div ng-show="!busy && numberOfRecords == -1" style="font-size: 120%; padding-top:2em;">
+<div ng-show="!busy && numberOfRecords == -1" style="font-size: 115%; padding-top:2em;">
   <p>
     This tool provides a human-friendly interface for searching
     the Norwegian authority file
@@ -16,7 +16,7 @@
     <a href="https://www.wikidata.org/wiki/Property:P1015">P1015</a> values on Wikidata.
   </p>
   <p>
-    The search is right-truncated by default.
+    The query is right-truncated by default.
   </p>
 </div>
 <div ng-if="error" class="alert alert-danger">
@@ -39,10 +39,11 @@
   </div>
 </div>
 
-<table infinite-scroll="moreRecords()"
-    infinite-scroll-distance="0"
-    infinite-scroll-disabled="busy"
-    class="table table-sm"
+<table ng-show="records.length"
+       infinite-scroll="moreRecords()"
+       infinite-scroll-distance="0"
+       infinite-scroll-disabled="busy"
+       class="table table-sm"
 >
   <tr>
     <th>
