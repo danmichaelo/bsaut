@@ -52,13 +52,13 @@
           Alternative names:
         </th>
         <td>
-          <div v-if="!record.altLabels.length" class="text-muted">(None)</div>
+          <div ng-if="!record.altLabels.length" class="text-muted">(None)</div>
           <div ng-repeat="name in record.altLabels">
             {{name}}
           </div>
         </td>
       </tr>
-      <tr ng-show="record.birth">
+      <tr ng-if="record.birth">
         <th class="text-right text-muted">
           Date of birth:
         </th>
@@ -66,7 +66,7 @@
           {{record.birth}}
         </td>
       </tr>
-      <tr ng-show="record.death">
+      <tr ng-if="record.death">
         <th class="text-right text-muted">
           Date of death:
         </th>
@@ -74,24 +74,26 @@
           {{record.death}}
         </td>
       </tr>
-      <tr ng-show="record.gender">
+      <tr ng-if="record.gender">
         <th class="text-right text-muted">
           Gender:
         </th>
         <td>
+          <i class="fa fa-male" ng-if="record.gender == 'male'"></i>
+          <i class="fa fa-female" ng-if="record.gender == 'female'"></i>
           {{record.gender}}
         </td>
       </tr>
-      <tr ng-show="record.nationality || record.geo">
+      <tr ng-if="record.nationality || record.geo">
         <th class="text-right text-muted">
           Nationality:
         </th>
         <td>
-          <div ng-show="record.nationality">{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
-          <div ng-show="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
+          <div ng-if="record.nationality">{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
+          <div ng-if="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
         </td>
       </tr>
-      <tr ng-show="record.status">
+      <tr ng-if="record.status">
         <th class="text-right text-muted">
           Status:
         </th>
