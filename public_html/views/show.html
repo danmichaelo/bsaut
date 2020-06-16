@@ -80,6 +80,23 @@
         {{record.gender}}
       </td>
     </tr>
+    <tr ng-show="record.status">
+      <th>
+        Status:
+      </th>
+      <td>
+        <span ng-if="record.status == 'kat3'">
+          <i class="fa fa-star"></i>
+          Record from National Library of Norway (kat3)
+        </span>
+        <span ng-if="record.status == 'kat2'">
+          Normal record (kat2)
+        </span>
+        <span ng-if="record.status == 'kat1'">
+          Draft record (kat1)
+        </span>
+      </td>
+    </tr>
   </table>
 
 
@@ -130,7 +147,7 @@
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
   <li ng-repeat="pub in publications">
     <a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
-      {{pub.creators[0].name}} ({{pub.year}}). <em>{{pub.title}}</em> <span ng-if="pub.electronic">(e-book)</span>
+      {{pub.year}}: {{pub.creators[0].name}}. <em>{{pub.title}}</em> <span ng-if="pub.electronic">(e-book)</span>
     </a>
   </li>
 </ul>
