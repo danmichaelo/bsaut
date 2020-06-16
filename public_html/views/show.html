@@ -85,8 +85,8 @@
         Nationality:
       </th>
       <td>
-        <div>{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
-        <div>{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
+        <div ng-show="record.nationality">{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
+        <div ng-show="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
       </td>
     </tr>
     <tr ng-show="record.status">
