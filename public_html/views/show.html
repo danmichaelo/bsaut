@@ -80,6 +80,15 @@
         {{record.gender}}
       </td>
     </tr>
+    <tr ng-show="record.nationality || record.geo">
+      <th>
+        Nationality:
+      </th>
+      <td>
+        <div>{{record.nationality}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
+        <div>{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
+      </td>
+    </tr>
     <tr ng-show="record.status">
       <th>
         Status:
@@ -87,10 +96,10 @@
       <td>
         <span ng-if="record.status == 'kat3'">
           <i class="fa fa-star"></i>
-          Record from National Library of Norway (kat3)
+          National Library of Norway record (kat3)
         </span>
         <span ng-if="record.status == 'kat2'">
-          Normal record (kat2)
+          Normal concortium record (kat2)
         </span>
         <span ng-if="record.status == 'kat1'">
           Draft record (kat1)

@@ -101,6 +101,10 @@ class AuthorityRecord
                 : null;
         }
 
+        // 386: Nasjonalitet / geografisk tilhørighet
+        $data['nationality'] = $record->query('386$a{$2=\bs-nasj}')->text();
+        $data['geo'] = $record->query('043$c')->text();
+
         // 4X0: See From Tracing
         foreach ($record->getFields('4.0|411', true) as $field) {
             $data['altLabels'][] = $field->sf('a');
