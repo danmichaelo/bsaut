@@ -61,7 +61,7 @@
   <tbody>
     <tr ng-repeat="record in records">
       <td>
-        <a href="show/{{record.id}}">{{ record.name }}</a>
+        <a ng-href="show/{{record.id}}">{{ record.name }}</a>
         <span ng-show="record.birth || record.death">
         ({{ record.birth }}-{{ record.death }})
       </span>

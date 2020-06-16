@@ -105,9 +105,17 @@ class AuthorityRecord
         $data['nationality'] = $record->query('386$a{$2=\bs-nasj}')->text();
         $data['geo'] = $record->query('043$c')->text();
 
-        // 4X0: See From Tracing
+        // 4XX: See From Tracing
         foreach ($record->getFields('4.0|411', true) as $field) {
             $data['altLabels'][] = $field->sf('a');
+        }
+
+        // 5XX: See Also Tracing
+        foreach ($record->getFields('5.0|511', true) as $field) {
+            $data['related'][] = [
+                'id' => str_replace('(NO-TrBIB)', '', $field->sf('0')),
+                'name' => $field->sf('a'),
+            ];
         }
 
         // 901: Status

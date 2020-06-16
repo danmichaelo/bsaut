@@ -24,14 +24,6 @@
   <table class="table table-sm table-borderless table-striped">
     <tbody>
       <tr>
-        <th class="text-right text-muted" style="width: 25%">
-          Record type:
-        </th>
-        <td>
-          {{record.class}}
-        </td>
-      </tr>
-      <tr>
         <th class="text-right text-muted">
           ID:
         </th>
@@ -39,6 +31,32 @@
           {{record.id}}
         </td>
       </tr>
+      <tr>
+        <th class="text-right text-muted" style="width: 25%">
+          Type:
+        </th>
+        <td>
+          {{record.class}}
+        </td>
+      </tr>
+      <tr ng-if="record.status">
+        <th class="text-right text-muted">
+          Status:
+        </th>
+        <td>
+          <span ng-if="record.status == 'kat3'">
+            <i class="fa fa-star"></i>
+            National Library of Norway record (kat3)
+          </span>
+          <span ng-if="record.status == 'kat2'">
+            Normal consortium record (kat2)
+          </span>
+          <span ng-if="record.status == 'kat1'">
+            Draft record (kat1)
+          </span>
+        </td>
+      </tr>
+
       <tr>
         <th class="text-right text-muted">
           Name:
@@ -93,21 +111,16 @@
           <div ng-if="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
         </td>
       </tr>
-      <tr ng-if="record.status">
+      <tr>
         <th class="text-right text-muted">
-          Status:
+          See also:
         </th>
         <td>
-          <span ng-if="record.status == 'kat3'">
-            <i class="fa fa-star"></i>
-            National Library of Norway record (kat3)
-          </span>
-          <span ng-if="record.status == 'kat2'">
-            Normal consortium record (kat2)
-          </span>
-          <span ng-if="record.status == 'kat1'">
-            Draft record (kat1)
-          </span>
+          <div ng-if="!record.related.length" class="text-muted">(None)</div>
+          <div ng-repeat="rel in record.related">
+            <a ng-if="rel.id" ng-href="/show/{{ rel.id }}">{{ rel.name }}</a>
+            <span ng-if="!rel.id">{{ rel.name }} ({{ rel.id }})</span>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -115,7 +128,7 @@
 
 
   <div class="row header">
-    <h3 class="col-sm-6">Links</h3>
+    <h3 class="col-sm-6">External links</h3>
     <div class="col-sm-6 h3r">
       VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
       WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
