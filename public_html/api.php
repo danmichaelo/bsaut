@@ -307,7 +307,7 @@ if (isset($_GET['id'])) {
         'everything' => 'cql.allIndexes',
         'persons' => 'bib.namePersonal',
         'corporations' => 'bib.nameCorporate',
-        'conferences' => 'bib.nameConference',
+        'meetings' => 'bib.nameConference',
     ];
     $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : 'cql.allIndexes';
 

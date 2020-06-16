@@ -52,8 +52,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       viafSearchField: 'local.corporateNames',
     },
     {
-      id: 'conferences',
-      label: 'Conferences',
+      id: 'meetings',
+      label: 'Meetings',
       viafSearchField: 'local.names',
     },
   ];
