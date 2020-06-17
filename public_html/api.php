@@ -85,6 +85,23 @@ class AuthorityRecord
             $this->parse1xxField($data, $nameField);
         }
 
+
+        // 374: Occupation (R)
+        if ($data['class'] == 'person') {
+            $data['occupations'] = [];
+            foreach ($record->getFields('374') as $field) {
+                $data['occupations'][] = [
+                    'value' => $field->sf('a'),
+                    'from' => $field->sf('s'),
+                    'until' => $field->sf('t'),
+                ];
+            }
+            // Alias occupation to the last value to make utilizing easier
+            $data['occupation'] = (count($data['occupations']) > 0)
+                ? $data['occupations'][count($data['occupations']) - 1]['value']  // assume sane ordering for now
+                : null;
+        }
+
         // 375: Gender (R)
         if ($data['class'] == 'person') {
             $data['genders'] = [];
@@ -97,7 +114,7 @@ class AuthorityRecord
                 $data['genders'][] = array(
                     'value' => $value,
                     'from' => $field->sf('s'),
-                    'until' => $field->sf('e'),
+                    'until' => $field->sf('t'),
                 );
             }
             // Alias gender to the last value to make utilizing easier

@@ -102,6 +102,14 @@
           {{record.gender}}
         </td>
       </tr>
+      <tr ng-if="record.occupation">
+        <th class="text-right text-muted">
+          Occupation:
+        </th>
+        <td>
+          {{record.occupation}}
+        </td>
+      </tr>
       <tr ng-if="record.nationality || record.geo">
         <th class="text-right text-muted">
           Nationality:
