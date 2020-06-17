@@ -111,6 +111,16 @@
           <div ng-if="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
         </td>
       </tr>
+      <tr ng-if="record.notes.length">
+        <th class="text-right text-muted">
+          Notes:
+        </th>
+        <td>
+          <div ng-repeat="(key, note) in record.notes">
+            {{ note.value }}
+          </div>
+        </td>
+      </tr>
       <tr>
         <th class="text-right text-muted">
           See also:

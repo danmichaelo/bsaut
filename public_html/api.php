@@ -118,6 +118,19 @@ class AuthorityRecord
             ];
         }
 
+        // 678: Biographical or Historical Data
+        $data['notes'] = [];
+        foreach ($record->getFields('678') as $field) {
+            $value = $field->sf('a');
+            if ($field->sf('b')) {
+                $value .= ' ' . $field->sf('b');
+            }
+            $data['notes'][] = [
+                'value' => $value,
+            ];
+        }
+
+
         // 901: Status
         $data['status'] = $record->query('901$a')->text();
 
