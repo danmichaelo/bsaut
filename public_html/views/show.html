@@ -201,8 +201,10 @@
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
   <li ng-repeat="pub in publications">
     <a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
-      {{pub.year}}: {{pub.creators[0].name}}. <em>{{pub.title}}</em> <span ng-if="pub.electronic">(e-book)</span>
+      {{pub.year}}: {{pub.creators[0].name}}. <em>{{pub.title}}</em>
     </a>
+    <span ng-if="pub.material_type">({{ pub.material_type }})</span>
+    <small>[<a ng-href="https://services.bibsys.no/marcPresentation/?mms_id={{pub.id}}">MARC</a>]</small>
   </li>
 </ul>
 

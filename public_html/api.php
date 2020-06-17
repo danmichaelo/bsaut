@@ -275,7 +275,13 @@ class BibliographicRecord
         $f007 = str_split($record->query('007')->text());
         $f008 = str_split($record->query('008')->text());
 
-        $data['electronic'] = ($f007[0] == 'c' && $f007[1] == 'r');
+        if ($f007[0] == 'c' && $f007[1] == 'r') {
+            $data['material_type'] = 'online';
+        } elseif ($f007[0] == 's') {
+            $data['material_type'] = 'audio';
+        } elseif ($f007[0] == 'v') {
+            $data['material_type'] = 'video';
+        }
 
         $this->data = $data;
     }
