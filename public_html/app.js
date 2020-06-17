@@ -217,8 +217,31 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           if (viaf && viaf.id) {
             element.html('<a href="http://viaf.org/viaf/' + viaf.id + '/">' + viaf.id + '</a> : ' + viaf.mainHeadings.reduce(function(prev, cur) { return (prev ? prev + ' | ' : '') + cur.title; }, null) );
           } else {
-            element.html('<em>Record not linked to VIAF</em>');
+            element.html('<em>Record not linked from VIAF</em>');
           }
+        }
+      })
+    }
+  }
+})
+
+.directive('isniLink', function () {
+  return {
+    // We limit this directive to attributes only
+    restrict : 'A',
+
+    // We will replace the original element code
+    replace : true,
+
+    // We must supply at least one element in the code to replace the div
+    template : '<td></td>',
+
+    link: function(scope, element, attrs) {
+      scope.$watch('record', (record) => {
+        if (record.other_ids.isni) {
+          element.html('<a href="https://isni.org/isni/' + record.other_ids.isni + '">' + record.other_ids.isni.match(/.{1,4}/g).join(' ') + '</a>');
+        } else {
+          element.html('<em>Record not linked to ISNI</em>');
         }
       })
     }

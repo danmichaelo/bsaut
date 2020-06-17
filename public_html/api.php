@@ -63,6 +63,11 @@ class AuthorityRecord
         $r = substr($f008, 11, 1);
         $data['vocabulary'] = isset(self::$vocabularies[$r]) ? self::$vocabularies[$r] : null;
 
+        // 024: Identifiers
+        foreach ($record->getFields('024') as $field) {
+            $data['other_ids'][$field->sf('2')] = $field->sf('a');
+        }
+
         // 040:
         $source = $record->getField('040');
         if (!is_null($source)) {
