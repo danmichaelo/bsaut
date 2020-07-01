@@ -124,7 +124,8 @@ class AuthorityRecord
         }
 
         // 386: Nasjonalitet / geografisk tilhørighet
-        $data['nationality'] = $record->query('386$a{$2=\bs-nasj}')->text();
+        $data['nationality_bs'] = $record->query('386$a{$2=\bs-nasj}')->text();
+        $data['nationality_bibbi'] = $record->query('386$a{$2=\bibbi}')->text();
         $data['geo'] = $record->query('043$c')->text();
 
         // 4XX: See From Tracing
