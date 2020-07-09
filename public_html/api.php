@@ -12,6 +12,8 @@ use Scriptotek\Marc\Record;
 use Scriptotek\Sru\Client as SruClient;
 
 
+const SOME_RECORD = 'some_record';
+
 class AuthorityRecord
 {
     /**
@@ -43,6 +45,17 @@ class AuthorityRecord
     {
         $record = Record::fromSimpleXMLElement($dom->el);
         $data = [];
+
+        // Leader
+        $ldr = str_split($record->getLeader());
+        $data['deleted'] = false;
+        $data['replaced_by'] = null;
+        if (in_array($ldr[5], ['d', 'x', 's'])) {
+            $data['deleted'] = true;
+            if ($ldr[5] == 'x') {
+                $data['replaced_by'] = SOME_RECORD;
+            }
+        }
 
         // 001: Control number
         $data['id'] = $record->query('001')->text();
@@ -343,11 +356,28 @@ $sru_version = '1.1';
 
 // Lookup by id
 if (isset($_GET['id'])) {
-    $p = AuthorityRecord::class;
-    $url = 'https://authority.bibsys.no/authority/rest/sru';
-    $schema = 'marcxchange';
-    $query = 'rec.identifier="' . $_GET['id'] . '"';
-    $limit = 1;
+
+    $url = 'https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=xml';
+    $res = Requests::get($url);
+    $x = new AuthorityRecord(QuiteSimpleXMLElement::make($res->body));
+    $rec = $x->toArray();
+    if ($rec['replaced_by'] == SOME_RECORD) {
+        // Erstatnings-ID ikke inkludert i MARCXML enda. Sendt mail Bibsys-support 2020-07-09
+        /*
+         *
+         * Returnerer ugyldig Content-Type, som får libcurl til å kræsje :(
+        $res2 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=json');
+        $json = json_decode($res2->body);
+        $rec['replaced_by'] = array_get($json, 'replacedBy');
+        */
+    }
+
+    echo json_encode([
+        'url' => $url,
+        'numberOfRecords' => 1,
+        'records' => [$rec],
+    ], JSON_PRETTY_PRINT);
+    exit;
 
 // Search by query
 } else if (isset($_GET['q'])) {
@@ -479,12 +509,12 @@ $url = $client->urlTo($query, $start, $limit, $extras);
 //    ));
 //    exit;
 //}
-$out = array(
+$out = [
     'url' => $url,
     'numberOfRecords' => $response->numberOfRecords,
-    'records' => array(),
+    'records' => [],
     'nextRecordPosition' => $response->nextRecordPosition,
-);
+];
 
 foreach ($response->records as $record) {
     $record->data->registerXPathNamespace('marc', 'http://www.loc.gov/MARC21/slim');

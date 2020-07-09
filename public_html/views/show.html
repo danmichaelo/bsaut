@@ -21,6 +21,9 @@
       View source (MARC XML)
     </a>
   </div>
+  <div ng-if="record.deleted" class="alert alert-danger">
+    This authority record has been deleted and should no longer be used.
+  </div>
   <table class="table table-sm table-borderless table-striped">
     <tbody>
       <tr>
