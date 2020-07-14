@@ -264,7 +264,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         console.log('wikidata changed');
         if (wikidata !== undefined) {
           if (wikidata && wikidata.id) {
-            element.html('<a href="https://wikidata.org/wiki/Q' + wikidata.id + '">Q' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
+            element.html('<a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
           } else {
             element.html('<em>Record not linked from Wikidata</em>');
           }
@@ -279,10 +279,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   this.fromBibsysId = function(id) {
     var deferred = $q.defer();
 
-    var data = { id: null };
-
     function queryWdq() {
-    console.log('Query WDQ');
+      console.log('Query WDQ');
       $http({
         url: 'https://wdq.wmflabs.org/api',
         method: 'JSONP',
@@ -297,17 +295,16 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
       .then(function(response) {
 
         if (response.data.items.length == 0) {
-          deferred.resolve(data);
+          deferred.resolve({ id: null });
           return;
         }
 
-        data.id = response.data.items[0];
-        queryWd()
+        queryWd(response.data.items[0])
       });
     }
 
     function querySparql() {
-    console.log('Query SPARQL');
+      console.log('Query SPARQL');
       $http({
         url: 'api.php',
         method: 'GET',
@@ -315,41 +312,45 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           sparql: id
         }
       })
-      .catch(function(response) {
+      .catch(response => {
         deferred.reject(response.status);
       })
-      .then(function(response) {
+      .then(response => {
+        const items = response.data.items
 
-        if (response.data.items.length == 0) {
-          deferred.resolve(data);
+        if (items.length == 0) {
+          deferred.resolve({ id: null });
+          console.log('No Wikidata element found');
           return;
         }
-        data.id = response.data.items[0].split('Q')[1];
-        queryWd()
+
+        queryWd('Q' + items[0].split('Q')[1])
       });
     }
 
-
-
-    function queryWd() {
-      console.log('Query WD');
+    function queryWd(wikidataId) {
+      console.log('Wikidata lookup: ' + wikidataId);
       $http({
         url: 'https://www.wikidata.org/w/api.php',
         method: 'JSONP',
         params: {
           action: 'wbgetentities',
           format: 'json',
-          ids: 'Q' + data.id,
+          ids: wikidataId,
           props: 'info|sitelinks/urls|aliases|labels|descriptions|claims|datatype',
           callback: 'JSON_CALLBACK'
         }
       })
-      .catch(function(response) {
+      .catch(response => {
+        console.log('Wikidata request failed!', response)
         deferred.reject(response.status);
       })
-      .then(function(response) {
-        // TODO
-        deferred.resolve(data);
+      .then(response => {
+        console.log('Wikidata response: ', response);
+        deferred.resolve({
+          id: wikidataId,
+          // TODO: Add more interesting stuff here
+        });
       });
     }
 
