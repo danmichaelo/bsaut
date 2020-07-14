@@ -338,8 +338,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
           format: 'json',
           ids: wikidataId,
           props: 'info|sitelinks/urls|aliases|labels|descriptions|claims|datatype',
-          callback: 'JSON_CALLBACK'
-        }
+        },
+        jsonpCallbackParam: 'callback',
       })
       .catch(response => {
         console.log('Wikidata request failed!', response)
