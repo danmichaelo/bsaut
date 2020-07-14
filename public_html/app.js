@@ -274,7 +274,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   }
 })
 
-.service('WikidataService', ['$http', '$q', function($http, $q) {
+.service('WikidataService', ['$http', '$q', '$sce', function($http, $q, $sce) {
 
   this.fromBibsysId = function(id) {
     var deferred = $q.defer();
@@ -331,7 +331,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     function queryWd(wikidataId) {
       console.log('Wikidata lookup: ' + wikidataId);
       $http({
-        url: 'https://www.wikidata.org/w/api.php',
+        url: $sce.trustAsResourceUrl('https://www.wikidata.org/w/api.php'),
         method: 'JSONP',
         params: {
           action: 'wbgetentities',
