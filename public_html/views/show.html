@@ -68,12 +68,11 @@
           {{record.name}}
         </td>
       </tr>
-      <tr>
+      <tr ng-if="record.altLabels.length">
         <th class="text-right text-muted">
           Alternative names:
         </th>
         <td>
-          <div ng-if="!record.altLabels.length" class="text-muted">(None)</div>
           <div ng-repeat="name in record.altLabels">
             {{name}}
           </div>
