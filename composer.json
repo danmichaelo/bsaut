@@ -6,7 +6,8 @@
         "scriptotek/sru-client": "^0.7.0",
         "php-http/guzzle6-adapter": "^2.0",
         "http-interop/http-factory-guzzle": "^1.0",
-        "nesbot/carbon": "^2.35"
+        "nesbot/carbon": "^2.35",
+        "league/iso3166": "^2.1"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

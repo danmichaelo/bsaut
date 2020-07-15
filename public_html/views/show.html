@@ -115,15 +115,17 @@
           {{record.occupation}}
         </td>
       </tr>
-      <tr ng-if="record.nationality_bs || record.nationality_bibbi || record.geo">
+      <tr ng-if="record.nationality_bs || record.nationality_bibbi || record.countries.length">
         <th class="text-right text-muted">
           Nationality:
         </th>
         <td>
           <div ng-if="record.nationality_bs">{{record.nationality_bs}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
           <div ng-if="record.nationality_bibbi">{{record.nationality_bibbi}} <span class="text-muted small">(from 386 $2 bibbi)</span></div>
-          <div ng-repeat="geo in record.geo">
-            {{geo}} <span class="text-muted small">(ISO 3166 code from 043)</span>
+          <div ng-repeat="country in record.countries">
+            <abbr ng-if="country.name" title="{{country.name}}">{{country.alpha2}}</abbr>
+            <span ng-if="!country.name">{{country.alpha2}}</span>
+            <span class="text-muted small">(ISO 3166 code from 043)</span>
           </div>
         </td>
       </tr>

@@ -150,10 +150,17 @@ class AuthorityRecord
         // 386: Nasjonalitet / geografisk tilhørighet
         $data['nationality_bs'] = $record->query('386$a{$2=\bs-nasj}')->text();
         $data['nationality_bibbi'] = $record->query('386$a{$2=\bibbi}')->text();
-        $data['geo'] = [];
+        $data['countries'] = [];
         foreach ($record->getFields('043') as $field) {
             foreach ($field->getSubfields('c') as $sf) {
-                $data['geo'][] = mb_strtoupper($sf->getData());
+                $countryCode = $sf->getData();
+                try {
+                    $data['countries'][] = (new \League\ISO3166\ISO3166)->alpha2($countryCode);
+                } catch (\League\ISO3166\Exception\DomainException $ex) {
+                    $data['countries'][] = [
+                        'alpha2' => mb_strtoupper($countryCode),
+                    ];
+                }
             }
         }
 
