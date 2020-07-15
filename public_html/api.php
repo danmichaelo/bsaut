@@ -150,7 +150,12 @@ class AuthorityRecord
         // 386: Nasjonalitet / geografisk tilhørighet
         $data['nationality_bs'] = $record->query('386$a{$2=\bs-nasj}')->text();
         $data['nationality_bibbi'] = $record->query('386$a{$2=\bibbi}')->text();
-        $data['geo'] = $record->query('043$c')->text();
+        $data['geo'] = [];
+        foreach ($record->getFields('043') as $field) {
+            foreach ($field->getSubfields('c') as $sf) {
+                $data['geo'][] = mb_strtoupper($sf->getData());
+            }
+        }
 
         // 4XX: See From Tracing
         foreach ($record->getFields('4.0|411', true) as $field) {

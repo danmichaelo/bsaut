@@ -122,7 +122,9 @@
         <td>
           <div ng-if="record.nationality_bs">{{record.nationality_bs}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
           <div ng-if="record.nationality_bibbi">{{record.nationality_bibbi}} <span class="text-muted small">(from 386 $2 bibbi)</span></div>
-          <div ng-if="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
+          <div ng-repeat="geo in record.geo">
+            {{geo}} <span class="text-muted small">(ISO 3166 code from 043)</span>
+          </div>
         </td>
       </tr>
       <tr ng-if="record.place_residence">
