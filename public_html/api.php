@@ -104,9 +104,19 @@ class AuthorityRecord
             $data['place_death'] = null;
             $data['place_residence'] = null;
             foreach ($record->getFields('370') as $field) {
-                $data['place_birth'] = $field->sf('a');
-                $data['place_death'] = $field->sf('b');
-                $data['place_residence'] = $field->sf('e');
+                if ($field->sf('a')) {
+                    $data['place_birth'] = $field->sf('a');
+                }
+                if ($field->sf('b')) {
+                    $data['place_death'] = $field->sf('b');
+                }
+                if ($field->sf('e')) {
+                    $data['place_residence'] = [
+                        'name' => $field->sf('e'),
+                        'start' => $field->sf('s'),
+                        'end' => $field->sf('t'),
+                    ];
+                }
             }
         }
 

@@ -134,7 +134,10 @@
           Place of residence:
         </th>
         <td>
-          {{record.place_residence}}
+          {{record.place_residence.name}}
+          <span ng-if="record.place_residence.start || record.place_residence.end">
+            ({{record.place_residence.start}}-{{record.place_residence.end}})
+          </span>
         </td>
       </tr>
       <tr ng-if="record.notes.length">
