@@ -230,8 +230,11 @@
 
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
   <li ng-repeat="pub in publications">
+    <span ng-if="pub.matched_creator && pub.matched_creator.role">
+      {{ pub.matched_creator.role }}
+    </span>
     <a href="http://bibsys-almaprimo.hosted.exlibrisgroup.com/primo_library/libweb/action/dlSearch.do?vid=BIBSYS&amp;institution=BIBSYS&amp;query=any,contains,{{pub.id}}">
-      {{pub.year}}: {{pub.creators[0].name}}. <em>{{pub.title}}</em>
+      {{pub.creators[0].name}} ({{pub.year}}). <em>{{pub.title}}</em>
     </a>
     <span ng-if="pub.material_type">({{ pub.material_type }})</span>
     <small>[<a ng-href="https://services.bibsys.no/marcPresentation/?mms_id={{pub.id}}">MARC</a>]</small>
