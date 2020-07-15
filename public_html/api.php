@@ -187,6 +187,19 @@ class AuthorityRecord
             ];
         }
 
+        // 672: Title Related to the Entity
+        $data['titles'] = [];
+        foreach ($record->getFields('672') as $field) {
+            $value = $field->sf('a');
+            if ($field->sf('b')) {
+                $value .= ' ' . $field->sf('b');
+            }
+            $data['titles'][] = [
+                'value' => $value,
+                'date' => $field->sf('f'),
+            ];
+        }
+
         // 678: Biographical or Historical Data
         $data['notes'] = [];
         foreach ($record->getFields('678') as $field) {

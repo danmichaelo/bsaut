@@ -149,9 +149,20 @@
           </div>
         </td>
       </tr>
+      <tr ng-if="record.titles.length">
+        <th class="text-right text-muted">
+          Works:
+        </th>
+        <td>
+          <div ng-repeat="(key, title) in record.titles">
+            {{ title.value }}
+            <span ng-if="title.date">({{ title.date}})</span>
+          </div>
+        </td>
+      </tr>
       <tr ng-if="record.related.length">
         <th class="text-right text-muted">
-          Related:
+          Related entities:
         </th>
         <td>
           <div ng-repeat="rel in record.related">
