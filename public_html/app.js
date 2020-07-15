@@ -3,6 +3,27 @@
 // Declare app level module which depends on filters, and services
 angular.module('app', ['ngRoute', 'infinite-scroll'])
 
+.factory('preventTemplateCache', function() {
+  /**
+   * Quick and dirty fix to prevent template caching.
+   * Ideally,
+   * Source: https://medium.com/angularjs-tricks/prevent-annoying-template-caching-in-angularjs-1-x-b706bf9c4056
+   */
+  const build = Date.now().toString();  // Would be better to use git build here, but then we need to fetch that.
+  return {
+    'request': function(config) {
+      console.log('CHECK', config.url)
+      if (config.url.indexOf('views') !== -1) {
+        config.url = config.url + '?t=' + build;
+      }
+      return config;
+    }
+  }
+})
+.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('preventTemplateCache');
+}])
+
 .config(function($routeProvider, $locationProvider) {
 
   $routeProvider
