@@ -150,12 +150,11 @@
           </div>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="record.related.length">
         <th class="text-right text-muted">
-          See also:
+          Related:
         </th>
         <td>
-          <div ng-if="!record.related.length" class="text-muted">(None)</div>
           <div ng-repeat="rel in record.related">
             <a ng-if="rel.id" ng-href="/show/{{ rel.id }}">{{ rel.name }}</a>
             <span ng-if="!rel.id">{{ rel.name }} ({{ rel.id }})</span>
