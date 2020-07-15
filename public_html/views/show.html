@@ -81,18 +81,20 @@
       </tr>
       <tr ng-if="record.birth">
         <th class="text-right text-muted">
-          Date of birth:
+          Birth:
         </th>
         <td>
           {{record.birth}}
+          <span ng-if="record.place_birth">({{ record.place_birth }})</span>
         </td>
       </tr>
       <tr ng-if="record.death">
         <th class="text-right text-muted">
-          Date of death:
+          Death:
         </th>
         <td>
           {{record.death}}
+          <span ng-if="record.place_death">({{ record.place_death }})</span>
         </td>
       </tr>
       <tr ng-if="record.gender">
@@ -121,6 +123,14 @@
           <div ng-if="record.nationality_bs">{{record.nationality_bs}} <span class="text-muted small">(from 386 $2 bs-nasj)</span></div>
           <div ng-if="record.nationality_bibbi">{{record.nationality_bibbi}} <span class="text-muted small">(from 386 $2 bibbi)</span></div>
           <div ng-if="record.geo">{{record.geo}} <span class="text-muted small">(ISO 3166 code from 043)</span></div>
+        </td>
+      </tr>
+      <tr ng-if="record.place_residence">
+        <th class="text-right text-muted">
+          Place of residence:
+        </th>
+        <td>
+          {{record.place_residence}}
         </td>
       </tr>
       <tr ng-if="record.notes.length">

@@ -98,6 +98,17 @@ class AuthorityRecord
             $this->parse1xxField($data, $nameField);
         }
 
+        // 370: Associated place
+        if ($data['class'] == 'person') {
+            $data['place_birth'] = null;
+            $data['place_death'] = null;
+            $data['place_residence'] = null;
+            foreach ($record->getFields('370') as $field) {
+                $data['place_birth'] = $field->sf('a');
+                $data['place_death'] = $field->sf('b');
+                $data['place_residence'] = $field->sf('e');
+            }
+        }
 
         // 374: Occupation (R)
         if ($data['class'] == 'person') {
