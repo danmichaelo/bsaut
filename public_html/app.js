@@ -328,7 +328,27 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         console.log('wikidata changed');
         if (wikidata !== undefined) {
           if (wikidata && wikidata.id) {
-            element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
+            let label = ''
+            const languages = ['en']
+            if (wikidata.labels[languages[0]]) {
+              label += wikidata.labels[languages[0]].value
+            }
+            if (wikidata.descriptions[languages[0]]) {
+              label += ' (' + wikidata.descriptions[languages[0]].value + ')'
+            }
+            if (wikidata.sitelinks['enwiki']) {
+              label += ' | <a href="' + wikidata.sitelinks['enwiki'].url + '">Wikipedia (en)</a>'
+            }
+            if (wikidata.sitelinks['nbwiki']) {
+              label += ' | <a href="' + wikidata.sitelinks['nbwiki'].url + '">Wikipedia (nb)</a>'
+            }
+            if (wikidata.sitelinks['nnwiki']) {
+              label += ' | <a href="' + wikidata.sitelinks['nnwiki'].url + '">Wikipedia (nn)</a>'
+            }
+            if (wikidata.sitelinks['svwiki']) {
+              label += ' | <a href="' + wikidata.sitelinks['svwiki'].url + '">Wikipedia (sv)</a>'
+            }
+            element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>) ' + label);
           } else {
             element.html('<i class="fa fa-times text-muted"></i> <em>Not linked from Wikidata</em>');
           }
@@ -410,9 +430,13 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         deferred.reject(response.status);
       })
       .then(response => {
-        console.log('Wikidata response: ', response);
+        const entity = response.data.entities[wikidataId];
+        console.log('Wikidata response: ', entity);
         deferred.resolve({
           id: wikidataId,
+          labels: entity.labels,
+          descriptions: entity.descriptions,
+          sitelinks: entity.sitelinks,
           // TODO: Add more interesting stuff here
         });
       });
