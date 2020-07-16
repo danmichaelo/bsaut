@@ -800,7 +800,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
           record.matched_creator = (record.creators === undefined)
               ? null
-              : record.creators.find(el => el.id.replace('(NO-TrBIB)', '') == $scope.id)
+              : record.creators.find(el => el.id ? el.id.replace('(NO-TrBIB)', '') == $scope.id : false)
           return record
         })
         $scope.publications = $scope.publications.concat(records);
