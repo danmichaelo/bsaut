@@ -350,7 +350,10 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
             }
             element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>) ' + label);
           } else {
-            element.html('<i class="fa fa-times text-muted"></i> <em>Not linked from Wikidata</em>');
+            element.html(
+              '<i class="fa fa-times text-muted"></i> <em>Not linked from Wikidata</em> ' +
+              '<a href="https://mix-n-match.toolforge.org/?#/search/' + scope.record.name + '?include=564">[Mix\'n\'match]</a>'
+            );
           }
         }
       })
