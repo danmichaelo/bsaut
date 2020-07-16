@@ -269,6 +269,49 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   }
 })
 
+.directive('bibbiLink', ['$http', function ($http) {
+  return {
+    // We limit this directive to attributes only
+    restrict : 'A',
+
+    // We will replace the original element code
+    replace : true,
+
+    // We must supply at least one element in the code to replace the div
+    template : '<td></td>',
+
+    link: function(scope, element, attrs) {
+      scope.$watch('record', (record) => {
+        if (record.other_ids.bibbi) {
+          const bibbi_id = record.other_ids.bibbi ;
+          const entity_uri = 'http://id.bibbi.dev/bibbi/' + bibbi_id ;
+
+          console.log('Checking Bibbi: '+ bibbi_id);
+          element.html(`<i class="fa fa-cog fa-spin"></i> <a href="${entity_uri}">${bibbi_id}</a>`);
+
+          $http.get('api.php?bibbi=' + bibbi_id)
+            .then(bibbi_res => {
+              console.log('Bibbi response: ', bibbi_res.data['@graph']);
+              const entity = bibbi_res.data['@graph'].find(entity => entity.uri == entity_uri)
+              if (entity) {
+                console.log(entity)
+                element.html(`<i class="fa fa-check-circle text-success"></i> <a href="${entity_uri}">${bibbi_id}</a> ${entity.prefLabel.nb}`);
+              } else {
+                element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: Failed to lookup`);
+              }
+            }).catch(err => {
+              console.error('Bibbi failed', err)
+              element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: An error occured`);
+            })
+
+        } else {
+          element.html('<i class="fa fa-times text-muted"></i> <em>Record not linked to Bibbi</em>');
+        }
+      })
+    }
+  }
+}])
+
 .directive('wdLink', function () {
   return {
     // We limit this directive to attributes only

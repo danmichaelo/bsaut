@@ -7,12 +7,193 @@ require_once('../vendor/autoload.php');
 
 use Carbon\Carbon;
 use Danmichaelo\QuiteSimpleXMLElement\QuiteSimpleXMLElement;
+use ML\JsonLD\JsonLD;
 use Scriptotek\Marc\Fields\Field;
 use Scriptotek\Marc\Record;
 use Scriptotek\Sru\Client as SruClient;
 
 
 const SOME_RECORD = 'some_record';
+
+const JSKOS_CONTEXT_EXTENDED = '{
+  "uri": "@id",
+  "type": {
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "@type": "@id",
+    "@container": "@set"
+  },
+  "created": {
+    "@id": "http://purl.org/dc/terms/created"
+  },
+  "issued": {
+    "@id": "http://purl.org/dc/terms/issued"
+  },
+  "modified": {
+    "@id": "http://purl.org/dc/terms/modified"
+  },
+  "creator": {
+    "@id": "http://purl.org/dc/terms/creator",
+    "@container": "@set"
+  },
+  "contributor": {
+    "@id": "http://purl.org/dc/terms/contributor",
+    "@container": "@set"
+  },
+  "publisher": {
+    "@id": "http://purl.org/dc/terms/publisher",
+    "@container": "@set"
+  },
+  "partOf": {
+    "@id": "http://purl.org/dc/terms/isPartOf",
+    "@container": "@set"
+  },
+  "url": {
+    "@id": "http://xmlns.com/foaf/0.1/page",
+    "@type": "@id"
+  },
+  "identifier": {
+    "@id": "http://purl.org/dc/terms/identifier",
+    "@container": "@set"
+  },
+  "notation": {
+    "@id": "http://www.w3.org/2004/02/skos/core#notation",
+    "@container": "@set"
+  },
+  "prefLabel": {
+    "@id": "http://www.w3.org/2004/02/skos/core#prefLabel",
+    "@container": "@language"
+  },
+  "altLabel": {
+    "@id": "http://www.w3.org/2004/02/skos/core#altLabel",
+    "@container": "@language"
+  },
+  "hiddenLabel": {
+    "@id": "http://www.w3.org/2004/02/skos/core#hiddenLabel",
+    "@container": "@language"
+  },
+  "note": {
+    "@id": "http://www.w3.org/2004/02/skos/core#note",
+    "@container": "@language"
+  },
+  "scopeNote": {
+    "@id": "http://www.w3.org/2004/02/skos/core#scopeNote",
+    "@container": "@language"
+  },
+  "definition": {
+    "@id": "http://www.w3.org/2004/02/skos/core#definition",
+    "@container": "@language"
+  },
+  "example": {
+    "@id": "http://www.w3.org/2004/02/skos/core#example",
+    "@container": "@language"
+  },
+  "historyNote": {
+    "@id": "http://www.w3.org/2004/02/skos/core#historyNote",
+    "@container": "@language"
+  },
+  "editorialNote": {
+    "@id": "http://www.w3.org/2004/02/skos/core#editorialNote",
+    "@container": "@language"
+  },
+  "changeNote": {
+    "@id": "http://www.w3.org/2004/02/skos/core#changeNote",
+    "@container": "@language"
+  },
+  "subject": {
+    "@id": "http://purl.org/dc/terms/subject",
+    "@container": "@set"
+  },
+  "subjectOf": {
+    "@reverse": "http://purl.org/dc/terms/subject",
+    "@container": "@set"
+  },
+  "depiction": {
+    "@id": "http://xmlns.com/foaf/0.1/depiction",
+    "@type": "@id",
+    "@container": "@set"
+  },
+  "narrower": {
+    "@id": "http://www.w3.org/2004/02/skos/core#narrower",
+    "@container": "@set"
+  },
+  "broader": {
+    "@id": "http://www.w3.org/2004/02/skos/core#broader",
+    "@container": "@set"
+  },
+  "related": {
+    "@id": "http://www.w3.org/2004/02/skos/core#related",
+    "@container": "@set"
+  },
+  "previous": {
+    "@id": "http://rdf-vocabulary.ddialliance.org/xkos#previous",
+    "@container": "@set"
+  },
+  "next": {
+    "@id": "http://rdf-vocabulary.ddialliance.org/xkos#next",
+    "@container": "@set"
+  },
+  "startDate": "http://schema.org/startDate",
+  "endDate": "http://schema.org/endDate",
+  "relatedDate": "http://www.w3.org/2000/01/rdf-schema#seeAlso",
+  "location": "http://schema.org/location",
+  "ancestors": {
+    "@id": "http://www.w3.org/2004/02/skos/core#broaderTransitive",
+    "@container": "@set"
+  },
+  "inScheme": {
+    "@id": "http://www.w3.org/2004/02/skos/core#inScheme",
+    "@container": "@set"
+  },
+  "topConceptOf": {
+    "@id": "http://www.w3.org/2004/02/skos/core#topConceptOf",
+    "@container": "@set"
+  },
+  "topConcepts": {
+    "@id": "http://www.w3.org/2004/02/skos/core#hasTopConcept",
+    "@container": "@set"
+  },
+  "versionOf": {
+    "@id": "http://purl.org/dc/terms/isVersionOf",
+    "@container": "@set"
+  },
+  "extent": "http://purl.org/dc/terms/extent",
+  "languages": {
+    "@id": "http://purl.org/dc/terms/language",
+    "@container": "@set"
+  },
+  "license": {
+    "@id": "http://purl.org/dc/terms/license",
+    "@container": "@set"
+  },
+  "namespace": "http://rdfs.org/ns/void#uriSpace",
+  "uriPattern": "http://rdfs.org/ns/void#voidRegexPattern",
+  "fromScheme": "http://rdfs.org/ns/void#subjectsTarget",
+  "toScheme": "http://rdfs.org/ns/void#objectsTarget",
+  "memberList": {
+    "@id": "http://www.loc.gov/mads/rdf/v1#componentList",
+    "@container": "@list"
+  },
+  "memberSet": {
+    "@id": "http://www.w3.org/2004/02/skos/core#member",
+    "@container": "@set"
+  },
+  "memberChoice": {
+    "@id": "http://www.w3.org/2004/02/skos/core#member",
+    "@container": "@set"
+  },
+  "count": "http://rdfs.org/ns/void#entities",
+  "distributions": {
+    "@id": "http://www.w3.org/ns/dcat#distribution",
+    "@container": "@set"
+  },
+  "download": "http://www.w3.org/ns/dcat#downloadURL",
+  "mimetype": "http://www.w3.org/ns/dcat#mediaType",
+  "format": "http://purl.org/dc/terms/format",
+
+  "birthDate": "https://schema.org/birthDate",
+  "deathDate": "https://schema.org/deathDate"
+}';
+
 
 class AuthorityRecord
 {
@@ -471,6 +652,20 @@ if (isset($_GET['id'])) {
     $query = 'local.source="bibsys|' . $_GET['viaf'] . '"';
     $limit = 1;
     $extras = array('httpAccept' => 'application/xml');
+
+// Lookup Bibbi
+} else if (isset($_GET['bibbi'])) {
+
+    $url = 'https://id.bibbi.dev/bibbi/' . $_GET['bibbi'];
+    $res = Requests::get($url, [
+        'Accept' => 'application/json',
+    ]);
+
+    $ld = JsonLD::expand($res->body);
+    $ld = JsonLD::compact($ld, JSKOS_CONTEXT_EXTENDED);
+
+    echo json_encode($ld);
+    exit;
 
 // WDQ
 } else if (isset($_GET['wdq'])) {
