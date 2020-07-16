@@ -13,7 +13,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   return {
     'request': function(config) {
       console.log('CHECK', config.url)
-      if (config.url.indexOf('views') !== -1) {
+      if (config.url.indexOf && config.url.indexOf('views') !== -1) {
         config.url = config.url + '?t=' + build;
       }
       return config;
@@ -344,7 +344,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     var deferred = $q.defer();
 
     function queryWdq() {
-      console.log('Query WDQ');
+      console.log('Query WDQ for',id);
       $http({
         url: 'https://wdq.wmflabs.org/api',
         method: 'JSONP',
@@ -368,7 +368,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     }
 
     function querySparql() {
-      console.log('Query SPARQL');
+      console.log('Query SPARQL for',id);
       $http({
         url: 'api.php',
         method: 'GET',
