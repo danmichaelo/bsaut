@@ -259,8 +259,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
     link: function(scope, element, attrs) {
       scope.$watch('record', (record) => {
-        if (record.other_ids.isni) {
-          element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://isni.org/isni/' + record.other_ids.isni + '">' + record.other_ids.isni.match(/.{1,4}/g).join(' ') + '</a>');
+        if (record.other_ids.isni.length) {
+          element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://isni.org/isni/' + record.other_ids.isni[0] + '">' + record.other_ids.isni.match(/.{1,4}/g).join(' ') + '</a>');
         } else {
           element.html('<i class="fa fa-times text-muted"></i> <em>Not linked to ISNI</em>');
         }
@@ -282,8 +282,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
     link: function(scope, element, attrs) {
       scope.$watch('record', (record) => {
-        if (record.other_ids.bibbi) {
-          const bibbi_id = record.other_ids.bibbi ;
+        if (record.other_ids.bibbi.length) {
+          const bibbi_id = record.other_ids.bibbi[0] ;
           const entity_uri = 'http://id.bibbi.dev/bibbi/' + bibbi_id ;
 
           console.log('Checking Bibbi: '+ bibbi_id);

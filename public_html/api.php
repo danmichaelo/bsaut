@@ -258,8 +258,13 @@ class AuthorityRecord
         $data['vocabulary'] = isset(self::$vocabularies[$r]) ? self::$vocabularies[$r] : null;
 
         // 024: Identifiers
+        $data['other_ids'] = [
+            'isni' => [],
+            'bibbi' => [],
+            'viaf' => [],
+        ];
         foreach ($record->getFields('024') as $field) {
-            $data['other_ids'][$field->sf('2')] = $field->sf('a');
+            $data['other_ids'][$field->sf('2')][] = $field->sf('a');
         }
 
         // 040:
