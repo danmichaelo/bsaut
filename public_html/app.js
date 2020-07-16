@@ -236,9 +236,9 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         console.log('VIAF changed');
         if (viaf !== undefined) {
           if (viaf && viaf.id) {
-            element.html('<a href="http://viaf.org/viaf/' + viaf.id + '/">' + viaf.id + '</a> : ' + viaf.mainHeadings.reduce(function(prev, cur) { return (prev ? prev + ' | ' : '') + cur.title; }, null) );
+            element.html('<i class="fa fa-check-circle text-success"></i> <a href="http://viaf.org/viaf/' + viaf.id + '/">' + viaf.id + '</a> ' + viaf.mainHeadings.reduce(function(prev, cur) { return (prev ? prev + ' | ' : '') + cur.title; }, null) );
           } else {
-            element.html('<em>Record not linked from VIAF</em>');
+            element.html('<i class="fa fa-times text-muted"></i> <em>Not linked from VIAF</em>');
           }
         }
       })
@@ -260,9 +260,9 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     link: function(scope, element, attrs) {
       scope.$watch('record', (record) => {
         if (record.other_ids.isni) {
-          element.html('<a href="https://isni.org/isni/' + record.other_ids.isni + '">' + record.other_ids.isni.match(/.{1,4}/g).join(' ') + '</a>');
+          element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://isni.org/isni/' + record.other_ids.isni + '">' + record.other_ids.isni.match(/.{1,4}/g).join(' ') + '</a>');
         } else {
-          element.html('<em>Record not linked to ISNI</em>');
+          element.html('<i class="fa fa-times text-muted"></i> <em>Not linked to ISNI</em>');
         }
       })
     }
@@ -328,9 +328,9 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         console.log('wikidata changed');
         if (wikidata !== undefined) {
           if (wikidata && wikidata.id) {
-            element.html('<a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
+            element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>)');
           } else {
-            element.html('<em>Record not linked from Wikidata</em>');
+            element.html('<i class="fa fa-times text-muted"></i> <em>Not linked from Wikidata</em>');
           }
         }
       })
@@ -509,7 +509,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     'cph': {label: 'Copyright holder', adverb: 'of/in'},
     'cpl': {label: 'Complainant', adverb: 'of/in'},
     'cpt': {label: 'Complainant-appellant', adverb: 'of/in'},
-    'cre': {label: 'Creator', adverb: 'of/in'},
+    'cre': {label: 'Creator', adverb: 'of'},
     'crp': {label: 'Correspondent', adverb: 'of/in'},
     'crr': {label: 'Corrector', adverb: 'of/in'},
     'crt': {label: 'Court reporter', adverb: 'of/in'},
@@ -528,9 +528,9 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     'dfd': {label: 'Defendant', adverb: 'of/in'},
     'dfe': {label: 'Defendant-appellee', adverb: 'of/in'},
     'dft': {label: 'Defendant-appellant', adverb: 'of/in'},
-    'dgg': {label: 'Degree granting institution', adverb: 'of/in'},
-    'dgs': {label: 'Degree supervisor', adverb: 'of/in'},
-    'dis': {label: 'Dissertant', adverb: 'of/in'},
+    'dgg': {label: 'Degree granting institution', adverb: 'for'},
+    'dgs': {label: 'Degree supervisor', adverb: 'for'},
+    'dis': {label: 'Dissertant', adverb: 'for'},
     'dln': {label: 'Delineator', adverb: 'of/in'},
     'dnc': {label: 'Dancer', adverb: 'of/in'},
     'dnr': {label: 'Donor', adverb: 'of/in'},
@@ -639,8 +639,8 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     'prf': {label: 'Performer', adverb: 'of/in'},
     'prg': {label: 'Programmer', adverb: 'of/in'},
     'prm': {label: 'Printmaker', adverb: 'of/in'},
-    'prn': {label: 'Production company', adverb: 'of/in'},
-    'pro': {label: 'Producer', adverb: 'of/in'},
+    'prn': {label: 'Production company', adverb: 'for'},
+    'pro': {label: 'Producer', adverb: 'of'},
     'prp': {label: 'Production place', adverb: 'of/in'},
     'prs': {label: 'Production designer', adverb: 'of/in'},
     'prt': {label: 'Printer', adverb: 'of/in'},
