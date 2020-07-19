@@ -260,7 +260,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     link: function(scope, element, attrs) {
       scope.$watch('record', (record) => {
         if (record.other_ids.isni.length) {
-          element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://isni.org/isni/' + record.other_ids.isni[0] + '">' + record.other_ids.isni.match(/.{1,4}/g).join(' ') + '</a>');
+          element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://isni.org/isni/' + record.other_ids.isni[0] + '">' + record.other_ids.isni[0].match(/.{1,4}/g).join(' ') + '</a>');
         } else {
           element.html('<i class="fa fa-times text-muted"></i> <em>Not linked to ISNI</em>');
         }
@@ -271,152 +271,59 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
 .directive('bibbiLink', ['$http', function ($http) {
   return {
-    // We limit this directive to attributes only
-    restrict : 'A',
+    // We limit this directive to elements only
+    restrict : 'E',
 
-    // We will replace the original element code
-    replace : true,
+    // We will replace the original element code?
+    replace : false,
+
+    scope: {
+    },
 
     // We must supply at least one element in the code to replace the div
-    template : '<td></td>',
+    template : '<div>TODO</div>',
 
     link: function(scope, element, attrs) {
-      scope.$watch('record', (record) => {
-        if (record.other_ids.bibbi.length) {
-          const bibbi_id = record.other_ids.bibbi[0] ;
-          const entity_uri = 'http://id.bibbi.dev/bibbi/' + bibbi_id ;
+      const bibbi_id = attrs.bibbiId;
+      console.log('Will check Bibbi id', bibbi_id);
+      const entity_uri = 'http://id.bibbi.dev/bibbi/' + bibbi_id ;
 
-          console.log('Checking Bibbi: '+ bibbi_id);
-          element.html(`<i class="fa fa-cog fa-spin"></i> <a href="${entity_uri}">${bibbi_id}</a>`);
+      console.log('Checking Bibbi: '+ bibbi_id);
+      element.html(`<i class="fa fa-cog fa-spin"></i> <a href="${entity_uri}">${bibbi_id}</a>`);
 
-          $http.get('api.php?bibbi=' + bibbi_id)
-            .then(bibbi_res => {
-              console.log('Bibbi response: ', bibbi_res.data['@graph']);
-              const entity = bibbi_res.data['@graph'].find(entity => entity.uri == entity_uri)
-              if (entity) {
-                console.log(entity)
-                element.html(`<i class="fa fa-check-circle text-success"></i> <a href="${entity_uri}">${bibbi_id}</a> ${entity.prefLabel.nb}`);
-              } else {
-                element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: Failed to lookup`);
-              }
-            }).catch(err => {
-              console.error('Bibbi failed', err)
-              element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: An error occured`);
-            })
-
-        } else {
-          element.html('<i class="fa fa-times text-muted"></i> <em>Record not linked to Bibbi</em>');
-        }
-      })
-    }
+      $http.get('api.php?bibbi=' + bibbi_id)
+        .then(bibbi_res => {
+          console.log('Bibbi response: ', bibbi_res.data['@graph']);
+          const entity = bibbi_res.data['@graph'].find(entity => entity.uri == entity_uri)
+          if (entity) {
+            console.log(entity)
+            element.html(`<i class="fa fa-check-circle text-success"></i> <a href="${entity_uri}">${bibbi_id}</a> ${entity.prefLabel.nb}`);
+          } else {
+            element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: Failed to lookup`);
+          }
+        }).catch(err => {
+          console.error('Bibbi failed', err)
+          element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: An error occured`);
+        })
+    },
   }
 }])
 
-.directive('wdLink', function () {
+.directive('wikidataLink', ['$http', '$sce', function ($http, $sce) {
   return {
     // We limit this directive to attributes only
-    restrict : 'A',
+    restrict : 'E',
 
     // We will replace the original element code
     replace : true,
 
     // We must supply at least one element in the code to replace the div
-    template : '<td><i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> Checking</td>',
+    template : '<div><i class="fa fa-cog fa-spin"></i> ...</div>',
 
     link: function(scope, element, attrs) {
-      scope.$watch('wikidata', function(wikidata) {
-        console.log('wikidata changed');
-        if (wikidata !== undefined) {
-          if (wikidata && wikidata.id) {
-            let label = ''
-            const languages = ['en']
-            if (wikidata.labels[languages[0]]) {
-              label += wikidata.labels[languages[0]].value
-            }
-            if (wikidata.descriptions[languages[0]]) {
-              label += ' (' + wikidata.descriptions[languages[0]].value + ')'
-            }
-            if (wikidata.sitelinks['enwiki']) {
-              label += ' | <a href="' + wikidata.sitelinks['enwiki'].url + '">Wikipedia (en)</a>'
-            }
-            if (wikidata.sitelinks['nbwiki']) {
-              label += ' | <a href="' + wikidata.sitelinks['nbwiki'].url + '">Wikipedia (nb)</a>'
-            }
-            if (wikidata.sitelinks['nnwiki']) {
-              label += ' | <a href="' + wikidata.sitelinks['nnwiki'].url + '">Wikipedia (nn)</a>'
-            }
-            if (wikidata.sitelinks['svwiki']) {
-              label += ' | <a href="' + wikidata.sitelinks['svwiki'].url + '">Wikipedia (sv)</a>'
-            }
-            element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> (<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>) ' + label);
-          } else {
-            element.html(
-              '<i class="fa fa-times text-muted"></i> <em>Not linked from Wikidata</em> ' +
-              '<a href="https://mix-n-match.toolforge.org/?#/search/' + scope.record.name + '?include=564">[Mix\'n\'match]</a>'
-            );
-          }
-        }
-      })
-    }
-  }
-})
-
-.service('WikidataService', ['$http', '$q', '$sce', function($http, $q, $sce) {
-
-  this.fromBibsysId = function(id) {
-    var deferred = $q.defer();
-
-    function queryWdq() {
-      console.log('Query WDQ for',id);
-      $http({
-        url: 'https://wdq.wmflabs.org/api',
-        method: 'JSONP',
-        params: {
-          q: 'string[1015:"' + id + '"]',
-          callback: 'JSON_CALLBACK'
-        }
-      })
-      .catch(function(response) {
-        deferred.reject(response.status);
-      })
-      .then(function(response) {
-
-        if (response.data.items.length == 0) {
-          deferred.resolve({ id: null });
-          return;
-        }
-
-        queryWd(response.data.items[0])
-      });
-    }
-
-    function querySparql() {
-      console.log('Query SPARQL for',id);
-      $http({
-        url: 'api.php',
-        method: 'GET',
-        params: {
-          sparql: id
-        }
-      })
-      .catch(response => {
-        deferred.reject(response.status);
-      })
-      .then(response => {
-        const items = response.data.items
-
-        if (items.length == 0) {
-          deferred.resolve({ id: null });
-          console.log('No Wikidata element found');
-          return;
-        }
-
-        queryWd('Q' + items[0].split('Q')[1])
-      });
-    }
-
-    function queryWd(wikidataId) {
+      const wikidataId = attrs.wikidataId;
       console.log('Wikidata lookup: ' + wikidataId);
+
       $http({
         url: $sce.trustAsResourceUrl('https://www.wikidata.org/w/api.php'),
         method: 'JSONP',
@@ -429,25 +336,64 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         jsonpCallbackParam: 'callback',
       })
       .catch(response => {
-        console.log('Wikidata request failed!', response)
-        deferred.reject(response.status);
+        element.html('Wikidata request failed!')
       })
       .then(response => {
         const entity = response.data.entities[wikidataId];
         console.log('Wikidata response: ', entity);
-        deferred.resolve({
+        const wikidata = {
           id: wikidataId,
           labels: entity.labels,
           descriptions: entity.descriptions,
           sitelinks: entity.sitelinks,
           // TODO: Add more interesting stuff here
-        });
+        };
+
+        let label = ''
+        const languages = ['en']
+        if (wikidata.labels[languages[0]]) {
+          label += wikidata.labels[languages[0]].value
+        }
+        if (wikidata.descriptions[languages[0]]) {
+          label += ' (' + wikidata.descriptions[languages[0]].value + ')'
+        }
+        if (wikidata.sitelinks['enwiki']) {
+          label += ' | <a href="' + wikidata.sitelinks['enwiki'].url + '">Wikipedia (en)</a>'
+        }
+        if (wikidata.sitelinks['nbwiki']) {
+          label += ' | <a href="' + wikidata.sitelinks['nbwiki'].url + '">Wikipedia (nb)</a>'
+        }
+        if (wikidata.sitelinks['nnwiki']) {
+          label += ' | <a href="' + wikidata.sitelinks['nnwiki'].url + '">Wikipedia (nn)</a>'
+        }
+        if (wikidata.sitelinks['svwiki']) {
+          label += ' | <a href="' + wikidata.sitelinks['svwiki'].url + '">Wikipedia (sv)</a>'
+        }
+        element.html(
+          '<i class="fa fa-check-circle text-success"></i> ' +
+          '<a href="https://wikidata.org/wiki/' + wikidata.id + '">' + wikidata.id + '</a> ' +
+          '[<a href="https://tools.wmflabs.org/reasonator/?&q=' + wikidata.id + '&lang=nb">Reasonator</a>] ' +
+          label
+        );
       });
-    }
+    },
+  }
+}])
 
-    querySparql();
+.service('WikidataService', ['$http', '$q', '$sce', function($http, $q, $sce) {
 
-    return deferred.promise;
+  this.fromBibsysId = function(id) {
+    console.log('Query SPARQL for',id);
+    return $http({
+      url: 'api.php',
+      method: 'GET',
+      params: {
+        sparql: id
+      }
+    })
+    .then(response => {
+      return response.data.items.map(item => 'Q' + item.split('Q')[1])
+    });
   }
 
 }])
@@ -773,13 +719,13 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
   // Query Wikidata
   WikidataService.fromBibsysId($scope.id).then(function(data) {
-    console.log('WD promise done');
+    console.log('WD promise done', data);
     $scope.wdBusy = false;
     $scope.wikidata = data;
     taskDone();
   }, function() {
     $scope.wdBusy = false;
-    $scope.wikidata = null;
+    $scope.wikidata = [];
     taskDone();
   });
 

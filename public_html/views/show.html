@@ -189,7 +189,19 @@
         <th class="text-right text-muted" style="width: 25%">
           Wikidata:
         </th>
-        <td wd-link>
+        <td>
+          <div ng-if="wdBusy">
+            <i class="fa fa-cog fa-spin"></i> Checking
+          </div>
+          <div ng-if="!wdBusy">
+            <div ng-if="!wikidata.length">
+              <i class="fa fa-times text-muted"></i> <em>Not linked from Wikidata</em>
+              <a ng-href="https://mix-n-match.toolforge.org/?#/search/{{ record.name}}?include=564">[Mix'n'match]</a>
+            </div>
+            <div ng-repeat="wikidata_id in wikidata">
+              <wikidata-link wikidata-id="{{ wikidata_id }}"></wikidata-link>
+            </div>
+          </div>
         </td>
       </tr>
       <tr>
@@ -210,7 +222,13 @@
         <th class="text-right text-muted">
           Bibbi:
         </th>
-        <td bibbi-link>
+        <td>
+          <div ng-if="!record.other_ids.bibbi.length">
+            <i class="fa fa-times text-muted"></i> <em>Not linked to Bibbi</em>
+          </div>
+          <div ng-repeat="bibbi_id in record.other_ids.bibbi">
+            <bibbi-link bibbi-id="{{ bibbi_id }}"></bibbi-link>
+          </div>
         </td>
       </tr>
     </tbody>

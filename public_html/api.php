@@ -700,11 +700,9 @@ if (isset($_GET['id'])) {
     $res = json_decode($res->body);
     $bindings = $res->results->bindings;
     header('Content-type: application/json; charset=utf-8');
-    if (count($bindings) == 0) {
-        echo json_encode(['items' => []]);
-    } else {
-        echo json_encode(['items' => [$bindings[0]->q->value]]);
-    }
+    echo json_encode([
+        'items' => array_map(function($binding) { return $binding->q->value; }, $bindings),
+    ]);
     exit;
 
 // WD
