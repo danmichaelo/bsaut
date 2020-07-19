@@ -17,9 +17,9 @@
     </div>
   </div>
   <div style="font-size:80%;">
-    <a href="https://authority.bibsys.no/authority/rest/sru?version=1.2&operation=searchRetrieve&startRecord=1&maximumRecords=1&query=rec.identifier%3D%22{{ record.id }}%22&recordSchema=marcxchange">
-      View source (MARC XML)
-    </a>
+    <a ng-href="https://authority.bibsys.no/authority/rest/authorities/html/{{ record.id }}">[Full record]</a>
+    <a ng-href="https://authority.bibsys.no/authority/rest/authorities/v2/{{ record.id }}?format=xml">[MARC XML]</a>
+    <a ng-href="https://authority.bibsys.no/authority/rest/authorities/v2/{{ record.id }}?format=json">[JSON]</a>
   </div>
   <div ng-if="record.deleted" class="alert alert-danger">
     This authority record has been deleted and should no longer be used.
