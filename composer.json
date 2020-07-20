@@ -1,6 +1,7 @@
 {
     "require": {
-        "illuminate/support": "5.2.45",
+        "php": "^7.3",
+        "ext-json": "*",
         "rmccue/requests": ">=1.0",
         "scriptotek/marc": "^2.1",
         "scriptotek/sru-client": "^0.7.0",
