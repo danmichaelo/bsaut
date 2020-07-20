@@ -7,6 +7,8 @@ require_once('../vendor/autoload.php');
 
 use Carbon\Carbon;
 use Danmichaelo\QuiteSimpleXMLElement\QuiteSimpleXMLElement;
+use League\ISO3166\Exception\ISO3166Exception;
+use League\ISO3166\ISO3166;
 use ML\JsonLD\JsonLD;
 use Scriptotek\Marc\Fields\Field;
 use Scriptotek\Marc\Record;
@@ -351,8 +353,8 @@ class AuthorityRecord
             foreach ($field->getSubfields('c') as $sf) {
                 $countryCode = $sf->getData();
                 try {
-                    $data['countries'][] = (new \League\ISO3166\ISO3166)->alpha2($countryCode);
-                } catch (\League\ISO3166\Exception\DomainException $ex) {
+                    $data['countries'][] = (new ISO3166())->alpha2($countryCode);
+                } catch (ISO3166Exception $ex) {
                     $data['countries'][] = [
                         'alpha2' => mb_strtoupper($countryCode),
                     ];
