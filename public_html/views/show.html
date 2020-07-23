@@ -226,7 +226,7 @@
           <div ng-if="!record.other_ids.bibbi.length">
             <i class="fa fa-times text-muted"></i> <em>Not linked to Bibbi</em>
           </div>
-          <div ng-repeat="bibbi_id in record.other_ids.bibbi">
+          <div ng-repeat="bibbi_id in record.other_ids.bibbi track by $index">
             <bibbi-link bibbi-id="{{ bibbi_id }}"></bibbi-link>
           </div>
         </td>
