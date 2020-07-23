@@ -388,12 +388,30 @@ class AuthorityRecord
             ];
         }
 
-        // 678: Biographical or Historical Data
         $data['notes'] = [];
+
+        // 678: Biographical or Historical Data
         foreach ($record->getFields('678') as $field) {
             $value = $field->sf('a');
             if ($field->sf('b')) {
                 $value .= ' ' . $field->sf('b');
+            }
+            $data['notes'][] = [
+                'value' => $value,
+            ];
+        }
+
+        // 680: Public General Note
+        // Example record: 7046226 Hen, L.R.
+        foreach ($record->getFields('680') as $field) {
+            $value = '';
+            foreach ($field->getSubfields() as $sf) {
+                if (in_array($sf->getCode(), ['i', 'a'])) {
+                    if (strlen($value) !== 0) {
+                        $value .= ' ';
+                    }
+                    $value .= $sf->getData();
+                }
             }
             $data['notes'][] = [
                 'value' => $value,
