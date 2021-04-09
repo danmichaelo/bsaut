@@ -104,9 +104,11 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
   this.busy = false;
   this.canceler = null;
 
-  this.searchBibsys = function(query, queryScope, startPos) {
+  this.searchBibsys = function(query, queryScope, startPos, limit) {
 
     // TODO: queryScope
+
+    limit = limit || 25;
 
     if (that.canceler) {
       console.log('Aborting');
@@ -119,7 +121,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     $rootScope.$broadcast('searchStart', query);
     $http({
       method: 'GET',
-      url: 'api.php?q=' + query + '&start=' + startPos + '&scope=' + queryScope,
+      url: `api.php?q=${query}&start=${startPos}&scope=${queryScope}&limit=${limit}`,
       timeout: that.canceler
     })
     .then(function(response) {
@@ -176,14 +178,14 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     $scope.error = 'Search failed';
   });
 
-  $scope.moreRecords = function () {
+  $scope.moreRecords = function (limit) {
     if ($scope.busy || ! nextRecordPosition || $scope.error) {
       return;
     }
     if ($scope.query) {
       console.log('Get more records from ', nextRecordPosition, 'scope: ', $scope.queryScope);
       $scope.error = null;
-      ApiService.searchBibsys($scope.query, $scope.queryScope, nextRecordPosition);
+      ApiService.searchBibsys($scope.query, $scope.queryScope, nextRecordPosition, limit);
     }
   };
 

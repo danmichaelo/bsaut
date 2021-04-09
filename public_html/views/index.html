@@ -40,8 +40,8 @@
 </div>
 
 <table ng-show="records.length"
-       infinite-scroll="moreRecords()"
-       infinite-scroll-distance="0"
+       infinite-scroll="moreRecords(50)"
+       infinite-scroll-distance="0.5"
        infinite-scroll-disabled="busy"
        class="table table-sm table-borderless table-striped"
 >

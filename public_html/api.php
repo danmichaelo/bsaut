@@ -606,6 +606,11 @@ $start = isset($_GET['start'])
 
 $sru_version = '1.1';
 
+$limit = 25;
+if (isset($_GET['limit'])) {
+    $limit = intval($_GET['limit']);
+}
+
 // Lookup by id
 if (isset($_GET['id'])) {
 
@@ -658,8 +663,6 @@ if (isset($_GET['id'])) {
         $query = $scope . '="' . addslashes($q) . '*"';
     }
 
-    $limit = 25;
-
 // Lookup publications by id
 } else if (isset($_GET['pub'])) {
     $p = BibliographicRecord::class;
@@ -667,7 +670,6 @@ if (isset($_GET['id'])) {
     $sru_version = '1.2';
     $url = 'https://bibsys-network.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK';
     $query = 'alma.authority_id="(NO-TrBIB)' . $_GET['pub'] . '" sortBy alma.main_pub_date/sort.descending';
-    $limit = 25;
 
 // Lookup VIAF
 } else if (isset($_GET['viaf'])) {
