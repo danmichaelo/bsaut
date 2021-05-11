@@ -288,7 +288,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     link: function(scope, element, attrs) {
       const bibbi_id = attrs.bibbiId;
       console.log('Will check Bibbi id', bibbi_id);
-      const entity_uri = 'http://id.bibbi.dev/bibbi/' + bibbi_id ;
+      const entity_uri = 'https://id.bs.no/bibbi/' + bibbi_id ;
 
       console.log('Checking Bibbi: '+ bibbi_id);
       element.html(`<i class="fa fa-cog fa-spin"></i> <a href="${entity_uri}">${bibbi_id}</a>`);
@@ -301,7 +301,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
             console.log(entity)
             element.html(`<i class="fa fa-check-circle text-success"></i> <a href="${entity_uri}">${bibbi_id}</a> ${entity.prefLabel.nb}`);
           } else {
-            element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: Failed to lookup`);
+            element.html(`<i class="fa fa-question-circle-o text-warning"></i> <a href="${entity_uri}">${bibbi_id}</a>: Lookup failed`);
           }
         }).catch(err => {
           console.error('Bibbi failed', err)
