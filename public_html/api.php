@@ -324,20 +324,19 @@ class AuthorityRecord
             }
         }
 
-        // 374: Occupation (R)
+        // 374: Occupation (R).
+        // Example repeated $a: https://bsaut.toolforge.org/show/90212312 (Kemp, Tom)
         if ($data['class'] == 'person') {
             $data['occupations'] = [];
             foreach ($record->getFields('374') as $field) {
-                $data['occupations'][] = [
-                    'value' => $field->sf('a'),
-                    'from' => $field->sf('s'),
-                    'until' => $field->sf('t'),
-                ];
+                foreach ($field->getSubfields('a') as $sf) {
+                    $data['occupations'][] = [
+                        'value' => $sf->getData(),
+                        'from' => $field->sf('s'),
+                        'until' => $field->sf('t'),
+                    ];
+                }
             }
-            // Alias occupation to the last value to make utilizing easier
-            $data['occupation'] = (count($data['occupations']) > 0)
-                ? $data['occupations'][count($data['occupations']) - 1]['value']  // assume sane ordering for now
-                : null;
         }
 
         // 375: Gender (R)

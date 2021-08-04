@@ -133,12 +133,27 @@
           </div>
         </td>
       </tr>
-      <tr ng-if="record.occupation">
+
+      <tr ng-if="record.occupations && record.occupations.length">
         <th class="text-right text-muted">
           Occupation:
         </th>
         <td>
-          {{record.occupation}}
+          <div ng-repeat="field in record.occupations">
+            {{field.value}}
+            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
+          </div>
+        </td>
+      </tr>
+      <tr ng-if="record.field_of_activity && record.field_of_activity.length">
+        <th class="text-right text-muted">
+          Field of activity:
+        </th>
+        <td>
+          <div ng-repeat="field in record.field_of_activity">
+            {{field.value}}
+            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
+          </div>
         </td>
       </tr>
       <tr ng-if="record.nationality_bs || record.nationality_bibbi || record.countries.length">
@@ -152,17 +167,6 @@
             <abbr ng-if="country.name" title="{{country.name}}">{{country.alpha2}}</abbr>
             <span ng-if="!country.name">{{country.alpha2}}</span>
             <span class="text-muted small">(ISO 3166 code from 043)</span>
-          </div>
-        </td>
-      </tr>
-      <tr ng-if="record.field_of_activity && record.field_of_activity.length">
-        <th class="text-right text-muted">
-          Field of activity:
-        </th>
-        <td>
-          <div ng-repeat="field in record.field_of_activity">
-            {{field.value}}
-            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
           </div>
         </td>
       </tr>
