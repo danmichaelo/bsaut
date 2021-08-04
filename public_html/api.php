@@ -310,14 +310,17 @@ class AuthorityRecord
 
         // 372: Field of Activity (R).
         // Example: https://bsaut.toolforge.org/show/99051907 (Rønningen, Anders)
+        // Example repeated $a: https://bsaut.toolforge.org/show/90074361 (Rose, J.)
         if ($data['class'] == 'person') {
             $data['field_of_activity'] = [];
             foreach ($record->getFields('372') as $field) {
-                $data['field_of_activity'][] = [
-                    'value' => $field->sf('a'),
-                    'from' => $field->sf('s'),
-                    'until' => $field->sf('t'),
-                ];
+                foreach ($field->getSubfields('a') as $sf) {
+                    $data['field_of_activity'][] = [
+                        'value' => $sf->getData(),
+                        'from' => $field->sf('s'),
+                        'until' => $field->sf('t'),
+                    ];
+                }
             }
         }
 
