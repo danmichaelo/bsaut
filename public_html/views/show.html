@@ -120,14 +120,17 @@
           <span ng-if="record.place_death">({{ record.place_death }})</span>
         </td>
       </tr>
-      <tr ng-if="record.gender">
+      <tr ng-if="record.genders && record.genders.length">
         <th class="text-right text-muted">
           Gender:
         </th>
         <td>
-          <i class="fa fa-male" ng-if="record.gender == 'male'"></i>
-          <i class="fa fa-female" ng-if="record.gender == 'female'"></i>
-          {{record.gender}}
+          <div ng-repeat="field in record.genders">
+            <i class="fa fa-male" ng-if="field.value == 'male'"></i>
+            <i class="fa fa-female" ng-if="field.value == 'female'"></i>
+            {{field.value}}
+            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
+          </div>
         </td>
       </tr>
       <tr ng-if="record.occupation">
