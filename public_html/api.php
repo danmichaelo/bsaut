@@ -424,6 +424,18 @@ class AuthorityRecord
             ];
         }
 
+        // 670: Source Data Found
+        // Example: https://bsaut.toolforge.org/show/13049248
+        // Multiple values: https://bsaut.toolforge.org/show/8036463
+        $data['sources'] = [];
+        foreach ($record->getFields('670') as $field) {
+            $data['sources'][] = [
+                'value' => $field->sf('a'),
+                'via' => $field->sf('b'),
+                'uri' => $field->sf('u'),
+            ];
+        }
+
         // 672: Title Related to the Entity
         $data['titles'] = [];
         foreach ($record->getFields('672') as $field) {

@@ -70,6 +70,16 @@
           {{ record.modified.substr(0, 10) }}
         </td>
       </tr>
+      <tr ng-if="record.sources.length">
+        <th class="text-right text-muted">
+          Sources:
+        </th>
+        <td>
+          <div ng-repeat="field in record.sources">
+            {{ field.value }}<small ng-if="field.via"> (via {{ field.via}})</small><small ng-if="field.uri">. <a ng-href="field.uri">{{ field.uri }}</a></small>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -213,6 +223,7 @@
           </div>
         </td>
       </tr>
+
       <tr ng-if="record.titles.length">
         <th class="text-right text-muted">
           Works:
