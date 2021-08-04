@@ -1,21 +1,16 @@
+
+
 <h2>
-  {{record.label ? record.label : id }}
+  <i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record.label }}
 </h2>
 
 <div ng-if="!authorityBusy && !record.id">
   <div class="alert alert-danger">
-    Bibsys authority record not found
+    Authority record not found
   </div>
 </div>
 
 <div ng-if="record.id">
-
-  <div class="row header">
-    <h3 class="col-sm-6">Bibsys authority record</h3>
-    <div class="col-sm-6 h3r">
-      <i class="fa fa-cog fa-spin" ng-show="authorityBusy"></i> {{record ? 'Bibsys query took' : 'Waited for'}} {{authorityTimer | number:2 }} secs
-    </div>
-  </div>
   <div style="font-size:80%;">
     <a ng-href="https://authority.bibsys.no/authority/rest/authorities/html/{{ record.id }}">[Full record]</a>
     <a ng-href="https://authority.bibsys.no/authority/rest/authorities/v2/{{ record.id }}?format=xml">[MARC XML]</a>
@@ -30,22 +25,16 @@
   <div ng-if="record.deleted && !record.replaced_by" class="alert alert-danger">
     This authority record has been deleted and should no longer be used. {{ record.replaced_by}}
   </div>
+
+  <h3 style="margin:0; font-size: 120%;">Authority record</h3>
   <table class="table table-sm table-borderless table-striped">
     <tbody>
       <tr>
-        <th class="text-right text-muted">
+        <th class="text-right text-muted" style="width: 25%">
           ID:
         </th>
         <td>
           {{record.id}}
-        </td>
-      </tr>
-      <tr>
-        <th class="text-right text-muted" style="width: 25%">
-          Type:
-        </th>
-        <td>
-          {{record.class}}
         </td>
       </tr>
       <tr ng-if="record.status">
@@ -65,9 +54,30 @@
           </span>
         </td>
       </tr>
-
-      <tr>
+      <tr ng-if="record.status">
         <th class="text-right text-muted">
+          Origin:
+        </th>
+        <td>
+          {{ record.origin }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin:0; font-size: 120%;">Described entity</h3>
+  <table class="table table-sm table-borderless table-striped col col-sm">
+    <tbody>
+      <tr>
+        <th class="text-right text-muted" style="width: 25%">
+          Type:
+        </th>
+        <td>
+          {{record.class}}
+        </td>
+      </tr>
+      <tr>
+        <th class="text-right text-muted" style="width: 25%">
           Name:
         </th>
         <td>
@@ -182,8 +192,8 @@
 
 
   <div class="row header">
-    <h3 class="col-sm-6">Links</h3>
-    <div class="col-sm-6 h3r">
+    <h3 class="col-sm-6" style="margin: 0; font-size: 120%;">Links</h3>
+    <div class="col-sm-6 h3r" style="margin: 0;">
       VIAF: <i class="fa fa-cog fa-spin" ng-show="viafBusy"></i> {{viafTimer | number:2 }} secs
       WD: <i class="fa fa-cog fa-spin" ng-show="wdBusy"></i> {{wdTimer | number:2 }} secs
     </div>
@@ -244,8 +254,8 @@
 
 
 <div class="row header">
-  <h3 class="col-sm-7">Bibliographic records in Oria</h3>
-  <div class="col-sm-5 h3r">
+  <h3 class="col-sm-7" style="margin:0; font-size: 120%;">Bibliographic records in Oria</h3>
+  <div class="col-sm-5 h3r" style="margin:0">
     <i class="fa fa-cog fa-spin" ng-show="biblioBusy"></i>
     <span ng-if="publications.length">
       {{ publications.length }} bibliographic records fetched
@@ -258,6 +268,10 @@
     </span>
   </div>
 </div>
+
+<p ng-if="!biblioBusy && !publications.length" style="margin: 1em 0;">
+  <em>No records found</em>
+</p>
 
 <ul infinite-scroll="morePublications()" infinite-scroll-distance="0" infinite-scroll-disabled="biblioBusy">
   <li ng-repeat="pub in publications">

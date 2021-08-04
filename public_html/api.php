@@ -619,17 +619,21 @@ if (isset($_GET['id'])) {
     $res = Requests::get($url);
     $x = new AuthorityRecord(QuiteSimpleXMLElement::make($res->body));
     $rec = $x->toArray();
+
+    $res2 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=json');
+    $jsonRec = json_decode($res2->body);
+
     if ($rec['replaced_by'] == SOME_RECORD) {
         // Erstatnings-ID ikke inkludert i MARCXML enda. Sendt mail Bibsys-support 2020-07-09
-        $res2 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=json');
-        $json = json_decode($res2->body);
         $rec['replaced_by'] = [];
-        $rec['replaced_by']['id'] = $json->replacedBy;
+        $rec['replaced_by']['id'] = $jsonRec->replacedBy;
 
-        $res3 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $json->replacedBy . '?format=xml');
+        $res3 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $jsonRec->replacedBy . '?format=xml');
         $replacementRecord = new AuthorityRecord(QuiteSimpleXMLElement::make($res3->body));
         $rec['replaced_by']['record'] = $replacementRecord->toArray();
     }
+
+    $rec['origin'] = $jsonRec->origin;
 
     echo json_encode([
         'url' => $url,
