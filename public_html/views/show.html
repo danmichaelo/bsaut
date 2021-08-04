@@ -75,8 +75,10 @@
           Sources:
         </th>
         <td>
-          <div ng-repeat="field in record.sources">
-            {{ field.value }}<small ng-if="field.via"> (via {{ field.via}})</small><small ng-if="field.uri">. <a ng-href="field.uri">{{ field.uri }}</a></small>
+          <div ng-repeat="field in record.sources" style="margin-bottom: 4px;">
+            <a ng-if="field.uri" ng-href="{{ field.uri }}">{{ field.value }}</a>
+            <span ng-if="!field.uri">{{ field.value }}</span>
+            <span ng-if="field.details"> : {{ field.details}})</span>
           </div>
         </td>
       </tr>
