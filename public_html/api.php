@@ -343,6 +343,21 @@ class AuthorityRecord
             }
         }
 
+        // 373: Associated Group (R).
+        // Example with repeated $a: https://bsaut.toolforge.org/show/1470399607364 (Danielsen, Marit)
+        if ($data['class'] == 'person') {
+            $data['groups'] = [];
+            foreach ($record->getFields('373') as $field) {
+                foreach ($field->getSubfields('a') as $sf) {
+                    $data['groups'][] = [
+                        'value' => $sf->getData(),
+                        'from' => $field->sf('s'),
+                        'until' => $field->sf('t'),
+                    ];
+                }
+            }
+        }
+
         // 374: Occupation (R).
         // Example repeated $a: https://bsaut.toolforge.org/show/90212312 (Kemp, Tom)
         if ($data['class'] == 'person') {

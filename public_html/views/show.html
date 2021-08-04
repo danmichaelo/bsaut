@@ -145,6 +145,17 @@
         </td>
       </tr>
 
+      <tr ng-if="record.groups && record.groups.length">
+        <th class="text-right text-muted">
+          Associated groups:
+        </th>
+        <td>
+          <div ng-repeat="field in record.groups">
+            {{field.value}}
+            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
+          </div>
+        </td>
+      </tr>
       <tr ng-if="record.occupations && record.occupations.length">
         <th class="text-right text-muted">
           Occupation:
