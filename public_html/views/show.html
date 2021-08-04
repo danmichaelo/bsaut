@@ -21,8 +21,14 @@
     <a ng-href="https://authority.bibsys.no/authority/rest/authorities/v2/{{ record.id }}?format=xml">[MARC XML]</a>
     <a ng-href="https://authority.bibsys.no/authority/rest/authorities/v2/{{ record.id }}?format=json">[JSON]</a>
   </div>
-  <div ng-if="record.deleted" class="alert alert-danger">
-    This authority record has been deleted and should no longer be used.
+  <div ng-if="record.replaced_by" class="alert alert-danger">
+    <i class="fa fa-arrow-circle-right"></i>
+    This authority record is no longer in use.
+    It has been replaced by:
+    <a ng-href="/show/{{ record.replaced_by.id }}">{{ record.replaced_by.record.name }} ({{ record.replaced_by.id }}) </a>
+  </div>
+  <div ng-if="record.deleted && !record.replaced_by" class="alert alert-danger">
+    This authority record has been deleted and should no longer be used. {{ record.replaced_by}}
   </div>
   <table class="table table-sm table-borderless table-striped">
     <tbody>

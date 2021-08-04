@@ -623,7 +623,12 @@ if (isset($_GET['id'])) {
         // Erstatnings-ID ikke inkludert i MARCXML enda. Sendt mail Bibsys-support 2020-07-09
         $res2 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=json');
         $json = json_decode($res2->body);
-        $rec['replaced_by'] = $json->replacedBy;
+        $rec['replaced_by'] = [];
+        $rec['replaced_by']['id'] = $json->replacedBy;
+
+        $res3 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $json->replacedBy . '?format=xml');
+        $replacementRecord = new AuthorityRecord(QuiteSimpleXMLElement::make($res3->body));
+        $rec['replaced_by']['record'] = $replacementRecord->toArray();
     }
 
     echo json_encode([
