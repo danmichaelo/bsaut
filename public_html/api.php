@@ -615,18 +615,15 @@ if (isset($_GET['limit'])) {
 if (isset($_GET['id'])) {
 
     $url = 'https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=xml';
+
     $res = Requests::get($url);
     $x = new AuthorityRecord(QuiteSimpleXMLElement::make($res->body));
     $rec = $x->toArray();
     if ($rec['replaced_by'] == SOME_RECORD) {
         // Erstatnings-ID ikke inkludert i MARCXML enda. Sendt mail Bibsys-support 2020-07-09
-        /*
-         *
-         * Returnerer ugyldig Content-Type, som får libcurl til å kræsje :(
         $res2 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=json');
         $json = json_decode($res2->body);
-        $rec['replaced_by'] = array_get($json, 'replacedBy');
-        */
+        $rec['replaced_by'] = $json->replacedBy;
     }
 
     echo json_encode([
@@ -645,12 +642,12 @@ if (isset($_GET['id'])) {
 
     $scope = isset($_GET['scope']) ? $_GET['scope'] : 'everything';
     $validScopes = [
-        'everything' => 'cql.allIndexes',
-        'persons' => 'bib.namePersonal',
-        'corporations' => 'bib.nameCorporate',
-        'meetings' => 'bib.nameConference',
+        'everything' => ['search' => 'cql.allIndexes', 'sort' => null],
+        'persons' => ['search' =>'bib.namePersonal', 'sort' =>'bib.namePersonal'],
+        'corporations' => ['search' => 'bib.nameCorporate', 'sort' => 'bib.nameCorporate'],
+        'meetings' => ['search' => 'bib.nameConference', 'sort' => 'bib.nameConference'],
     ];
-    $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : 'cql.allIndexes';
+    $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : $validScopes['everything'];
 
     if (preg_match('/^([^,]+) ([^, ]+)$/', $q, $matches)) {
         $q = $matches[2] . ', ' . $matches[1];
@@ -658,9 +655,12 @@ if (isset($_GET['id'])) {
     if (preg_match('/^[0-9]+$/', $q)) {
         $query = 'rec.identifier="' . $q . '"';
     } elseif (preg_match('/^"(.*)"$/', $q, $matches)) {
-        $query = $scope . '="' . addslashes($q) . '"';
+        $query = $scope['search'] . '="' . addslashes($q) . '"';
     } else {
-        $query = $scope . '="' . addslashes($q) . '*"';
+        $query = $scope['search'] . '="' . addslashes($q) . '*"';
+    }
+    if (isset($scope['sort'])) {
+        $query .= ' sortBy ' . $scope['sort'];
     }
 
 // Lookup publications by id
