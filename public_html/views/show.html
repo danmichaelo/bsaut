@@ -144,6 +144,17 @@
           </div>
         </td>
       </tr>
+      <tr ng-if="record.field_of_activity && record.field_of_activity.length">
+        <th class="text-right text-muted">
+          Field of activity:
+        </th>
+        <td>
+          <div ng-repeat="field in record.field_of_activity">
+            {{field.value}}
+            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
+          </div>
+        </td>
+      </tr>
       <tr ng-if="record.place_residence">
         <th class="text-right text-muted">
           Place of residence:

@@ -308,6 +308,19 @@ class AuthorityRecord
             }
         }
 
+        // 372: Field of Activity (R).
+        // Example: https://bsaut.toolforge.org/show/99051907 (Rønningen, Anders)
+        if ($data['class'] == 'person') {
+            $data['field_of_activity'] = [];
+            foreach ($record->getFields('372') as $field) {
+                $data['field_of_activity'][] = [
+                    'value' => $field->sf('a'),
+                    'from' => $field->sf('s'),
+                    'until' => $field->sf('t'),
+                ];
+            }
+        }
+
         // 374: Occupation (R)
         if ($data['class'] == 'person') {
             $data['occupations'] = [];
