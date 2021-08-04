@@ -56,10 +56,18 @@
       </tr>
       <tr ng-if="record.status">
         <th class="text-right text-muted">
-          Origin:
+          Created:
         </th>
         <td>
-          {{ record.origin }}
+          {{ record.created.substr(0, 10) }} ({{ record.origin }})
+        </td>
+      </tr>
+      <tr ng-if="record.status">
+        <th class="text-right text-muted">
+          Last updated:
+        </th>
+        <td>
+          {{ record.modified.substr(0, 10) }}
         </td>
       </tr>
     </tbody>

@@ -647,6 +647,8 @@ if (isset($_GET['id'])) {
     }
 
     $rec['origin'] = $jsonRec->origin;
+    $rec['modified'] = $jsonRec->lastUpdateDate;
+    $rec['created'] = $jsonRec->createdDate;
 
     echo json_encode([
         'url' => $url,
