@@ -84,6 +84,17 @@
           {{record.class}}
         </td>
       </tr>
+      <tr ng-if="record.corporation_types && record.corporation_types.length">
+        <th class="text-right text-muted" style="width: 25%">
+          Type of corporate body:
+        </th>
+        <td>
+          <div ng-repeat="field in record.corporation_types">
+            {{field.value}}
+            <span ng-if="field.from">({{ field.from }}-{{ field.until }})</span>
+          </div>
+        </td>
+      </tr>
       <tr>
         <th class="text-right text-muted" style="width: 25%">
           Name:

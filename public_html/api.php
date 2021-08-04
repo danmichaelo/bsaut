@@ -286,6 +286,25 @@ class AuthorityRecord
             $this->parse1xxField($data, $nameField);
         }
 
+        // 368$a: Type of corporate body (R).
+        // Example: https://bsaut.toolforge.org/show/1492758308143
+        if ($data['class'] == 'corporation') {
+            $data['corporation_types'] = [];
+            foreach ($record->getFields('368') as $field) {
+                foreach ($field->getSubfields('a') as $sf) {
+                    $data['corporation_types'][] = [
+                        'value' => $sf->getData(),
+                        'from' => $field->sf('s'),
+                        'until' => $field->sf('t'),
+                    ];
+                }
+            }
+            // Alias to the last value to make utilizing easier
+            $data['corporation_type'] = (count($data['corporation_types']) > 0)
+                ? $data['corporation_types'][count($data['corporation_types']) - 1]['value']  // assume sane ordering for now
+                : null;
+        }
+
         // 370: Associated place
         if ($data['class'] == 'person') {
             $data['place_birth'] = null;

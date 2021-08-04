@@ -70,7 +70,7 @@
         <i class="fa fa-star" ng-show="record.status == 'kat3'" title="Nasjonalt autoritetsregister (kat3)"></i>
       </td>
       <td>
-        {{ record.class }}
+        {{ record.corporation_type || record.class }}
       </td>
       <td>
         <span>{{ record.id }}</span>
