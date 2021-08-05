@@ -698,7 +698,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
 
   // Query Bibsys
   $http.get('api.php?id=' + $scope.id)
-    .then(function(response) {
+    .then(function successCallback(response) {
       let record = response.data.numberOfRecords ? response.data.records[0] : false;
       if (record && record.altLabels) {
         record.altLabels = record.altLabels.filter(function (value, index, self) {
@@ -707,6 +707,11 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
         })
       }
       $scope.record = record;
+      $scope.authorityBusy = false;
+      taskDone();
+    }, function errorCallback(response) {
+      $scope.error = response.error;
+      $scope.record = null;
       $scope.authorityBusy = false;
       taskDone();
     });

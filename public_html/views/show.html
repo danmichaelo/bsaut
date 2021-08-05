@@ -5,7 +5,10 @@
 </h2>
 
 <div ng-if="!authorityBusy && !record.id">
-  <div class="alert alert-danger">
+  <div ng-if="error" class="alert alert-danger">
+    Failed to retrieve record data: {{ error }}
+  </div>
+  <div ng-if="!error" class="alert alert-danger">
     Authority record not found
   </div>
 </div>

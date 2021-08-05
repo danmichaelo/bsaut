@@ -673,13 +673,32 @@ if (isset($_GET['limit'])) {
     $limit = intval($_GET['limit']);
 }
 
+function returnError($code, $err) {
+    http_response_code($code);
+    echo json_encode($err);
+    exit;
+}
+
 // Lookup by id
 if (isset($_GET['id'])) {
 
     $url = 'https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=xml';
 
     $res = Requests::get($url);
-    $x = new AuthorityRecord(QuiteSimpleXMLElement::make($res->body));
+    if ($res->status_code == 404) {
+        returnError(404, [
+            "message" => "No such record",
+        ]);
+    }
+    try {
+        $x = new AuthorityRecord(QuiteSimpleXMLElement::make($res->body));
+    } catch(\Exception $e) {
+        returnError(500, [
+            "message" => "Failed to parse record",
+            "record" => $res->body,
+            "error" => (string) $e->getMessage(),
+        ]);
+    }
     $rec = $x->toArray();
 
     $res2 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $_GET['id'] . '?format=json');
@@ -691,8 +710,10 @@ if (isset($_GET['id'])) {
         $rec['replaced_by']['id'] = $jsonRec->replacedBy;
 
         $res3 = Requests::get('https://authority.bibsys.no/authority/rest/authorities/v2/' . $jsonRec->replacedBy . '?format=xml');
-        $replacementRecord = new AuthorityRecord(QuiteSimpleXMLElement::make($res3->body));
-        $rec['replaced_by']['record'] = $replacementRecord->toArray();
+        if ($res3->status_code == 200) {
+            $replacementRecord = new AuthorityRecord(QuiteSimpleXMLElement::make($res3->body));
+            $rec['replaced_by']['record'] = $replacementRecord->toArray();
+        }
     }
 
     $rec['origin'] = $jsonRec->origin;
