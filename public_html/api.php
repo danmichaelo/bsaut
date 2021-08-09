@@ -754,7 +754,8 @@ if (isset($_GET['id'])) {
         $query = $scope['search'] . '="' . addslashes($q) . '*"';
     }
     if (isset($scope['sort'])) {
-        $query .= ' sortBy ' . $scope['sort'];
+        // Not supported by Unit yet. Ticket: 202104071050444
+        // $query .= ' sortBy ' . $scope['sort'];
     }
 
 // Lookup publications by id
