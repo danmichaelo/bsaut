@@ -778,7 +778,7 @@ if (isset($_GET['id'])) {
 // Lookup Bibbi
 } else if (isset($_GET['bibbi'])) {
 
-    $url = 'https://id.bs.no/bibbi/' . $_GET['bibbi'];
+    $url = $_GET['bibbi'];
     $res = Requests::get($url, [
         'Accept' => 'application/json',
     ]);

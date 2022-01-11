@@ -288,12 +288,12 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     link: function(scope, element, attrs) {
       const bibbi_id = attrs.bibbiId;
       console.log('Will check Bibbi id', bibbi_id);
-      const entity_uri = 'https://id.bs.no/bibbi/' + bibbi_id ;
+      const entity_uri = (bibbi_id && bibbi_id.startsWith('https')) ? bibbi_id : 'https://id.bs.no/bibbi/' + bibbi_id ;
 
       console.log('Checking Bibbi: '+ bibbi_id);
       element.html(`<i class="fa fa-cog fa-spin"></i> <a href="${entity_uri}">${bibbi_id}</a>`);
 
-      $http.get('api.php?bibbi=' + bibbi_id)
+      $http.get('api.php?bibbi=' + entity_uri)
         .then(bibbi_res => {
           console.log('Bibbi response: ', bibbi_res.data['@graph']);
           const entity = bibbi_res.data['@graph'].find(entity => entity.uri == entity_uri)
