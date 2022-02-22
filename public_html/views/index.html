@@ -29,14 +29,6 @@
   <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords && records.length !== 0">
     {{ records.length }} record(s) found:
   </div>
-  <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords && records.length === 0">
-    <p>
-      No records found for «{{ query }}»
-    </p>
-    <p>
-      <a ng-href="https://viaf.org/viaf/search?query={{ viafSearchField }}%20all%20%22{{ queryEncoded }}%22&sortKeys=holdingscount&recordSchema=BriefVIAF">Try searching VIAF</a>
-    </p>
-  </div>
 </div>
 
 <table ng-show="records.length"
@@ -78,3 +70,17 @@
     </tr>
   </tbody>
 </table>
+
+
+<div ng-show="!busy && !error">
+  <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords && records.length === 0">
+    <p>
+      No records found for «{{ query }}»
+    </p>
+  </div>
+  <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords && records.length < 20">
+    <p>
+      <a ng-href="https://viaf.org/viaf/search?query={{ viafSearchField }}%20all%20%22{{ queryEncoded }}%22&sortKeys=holdingscount&recordSchema=BriefVIAF">Try searching VIAF</a>
+    </p>
+  </div>
+</div>
