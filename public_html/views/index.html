@@ -78,7 +78,7 @@
       No records found for «{{ query }}»
     </p>
   </div>
-  <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords && records.length < 20">
+  <div ng-if="numberOfRecords !== -1 && records.length >= numberOfRecords">
     <p>
       <a ng-href="https://viaf.org/viaf/search?query={{ viafSearchField }}%20all%20%22{{ queryEncoded }}%22&sortKeys=holdingscount&recordSchema=BriefVIAF">Try searching VIAF</a>
     </p>
