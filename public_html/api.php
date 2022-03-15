@@ -743,6 +743,9 @@ if (isset($_GET['id'])) {
     ];
     $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : $validScopes['everything'];
 
+    // Replace hyphen with space
+    $q = preg_replace('/[\-]/', ' ', $q);
+
     if (preg_match('/^([^,]+) ([^, ]+)$/', $q, $matches)) {
         $q = $matches[2] . ', ' . $matches[1];
     }
