@@ -739,7 +739,7 @@ if (isset($_GET['id'])) {
         'everything' => ['search' => 'cql.allIndexes=?'],
         'persons' => ['search' =>'cql.allIndexes=? AND bs.authoritytype=person'],
         'corporations' => ['search' => 'cql.allIndexes=? AND bs.authoritytype=corporation'],
-        'meetings' => ['search' => 'cql.allIndexes=? AND bs.authoritytype=conference'],
+        'meetings' => ['search' => 'cql.allIndexes=? AND bs.authoritytype=meeting'],
     ];
     $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : $validScopes['everything'];
 
