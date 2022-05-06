@@ -736,10 +736,10 @@ if (isset($_GET['id'])) {
 
     $scope = isset($_GET['scope']) ? $_GET['scope'] : 'everything';
     $validScopes = [
-        'everything' => ['search' => 'cql.allIndexes', 'sort' => null],
-        'persons' => ['search' =>'bib.namePersonal', 'sort' =>'bib.namePersonal'],
-        'corporations' => ['search' => 'bib.nameCorporate', 'sort' => 'bib.nameCorporate'],
-        'meetings' => ['search' => 'bib.nameConference', 'sort' => 'bib.nameConference'],
+        'everything' => ['search' => 'cql.allIndexes=?'],
+        'persons' => ['search' =>'cql.allIndexes=? AND bs.authoritytype=person'],
+        'corporations' => ['search' => 'cql.allIndexes=? AND bs.authoritytype=corporation'],
+        'meetings' => ['search' => 'cql.allIndexes=? AND bs.authoritytype=conference'],
     ];
     $scope = isset($validScopes[$scope]) ? $validScopes[$scope] : $validScopes['everything'];
 
@@ -752,9 +752,9 @@ if (isset($_GET['id'])) {
     if (preg_match('/^[0-9]+$/', $q)) {
         $query = 'rec.identifier="' . $q . '"';
     } elseif (preg_match('/^"(.*)"$/', $q, $matches)) {
-        $query = $scope['search'] . '="' . addslashes($q) . '"';
+        $query = str_replace("?", '"' . addslashes($q) . '"', $scope['search']);
     } else {
-        $query = $scope['search'] . '="' . addslashes($q) . '*"';
+        $query = str_replace("?", '"' . addslashes($q) . '*"', $scope['search']);
     }
     if (isset($scope['sort'])) {
         // Not supported by Unit yet. Ticket: 202104071050444
