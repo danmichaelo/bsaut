@@ -1,7 +1,11 @@
 {
-    "name": "BsAut",
+    "name": "toolforge-bsaut",
+    "title": "BsAut",
     "description": "Search the Norwegian Bibsys authority register for persons, and check linkage to VIAF and Wikidata.",
-    "url": "http://tools.wmflabs.org/bsaut/",
+    "url": "https://bsaut.toolforge.org/",
     "keywords": "libraries, authority control, search",
-    "author": "Dan Michael O. Heggø"
+    "author": "Dan Michael O. Heggø",
+    "repository": "https://github.com/danmichaelo/bsaut/",
+    "license": "MIT",
+    "tool_type": "web app"
 }
