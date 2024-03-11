@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED);
 ini_set('display_errors', '1');
 
 require_once('../vendor/autoload.php');
@@ -13,6 +13,7 @@ use ML\JsonLD\JsonLD;
 use Scriptotek\Marc\Fields\Field;
 use Scriptotek\Marc\Record;
 use Scriptotek\Sru\Client as SruClient;
+use WpOrg\Requests\Requests;
 
 
 const SOME_RECORD = 'some_record';

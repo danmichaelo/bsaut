@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": "^7.3",
+        "php": "^8.2",
         "ext-json": "*",
         "rmccue/requests": ">=1.0",
         "scriptotek/marc": "^2.1",
@@ -8,7 +8,7 @@
         "php-http/guzzle6-adapter": "^2.0",
         "http-interop/http-factory-guzzle": "^1.0",
         "nesbot/carbon": "^2.35",
-        "league/iso3166": "^2.1",
+        "league/iso3166": "^4.0",
         "ml/json-ld": "^1.2"
     },
     "minimum-stability": "dev",
