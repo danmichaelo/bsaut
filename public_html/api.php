@@ -773,7 +773,7 @@ if (isset($_GET['id'])) {
 // Lookup VIAF
 } else if (isset($_GET['viaf'])) {
     $p = ViafRecord::class;
-    $url = 'http://viaf.org/viaf/search';
+    $url = 'https://viaf.org/viaf/search';
     $schema = 'default'; // VIAF-XML
     $query = 'local.source="bibsys|' . $_GET['viaf'] . '"';
     $limit = 1;
