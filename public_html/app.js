@@ -262,7 +262,7 @@ angular.module('app', ['ngRoute', 'infinite-scroll'])
     link: function(scope, element, attrs) {
       scope.$watch('record', (record) => {
         if (record.other_ids.isni.length) {
-          element.html('<i class="fa fa-check-circle text-success"></i> <a href="https://isni.org/isni/' + record.other_ids.isni[0] + '">' + record.other_ids.isni[0].match(/.{1,4}/g).join(' ') + '</a>');
+          element.html('<i class="fa fa-check-circle text-success"></i> <a href="' + record.other_ids.isni[0] + '">' + record.other_ids.isni[0].split("/").pop().match(/.{1,4}/g).join(' ') + '</a>');
         } else {
           element.html('<i class="fa fa-times text-muted"></i> <em>Not linked to ISNI</em>');
         }
