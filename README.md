@@ -49,3 +49,27 @@ devenv up
 ```
 
 Open http://127.0.0.1:8080/. `devenv up` serves `public_html` and sends routes such as `/search` and `/show/7031632` to `index.html`, the same way `.lighttpd.conf` does on Toolforge. `composer install` is only needed when `vendor/` is missing.
+
+
+### Deployment notes
+
+```bash
+# Login and update code
+ssh tools-login.wmflabs.org
+become bsaut
+git pull   # uses read-only deployment key in ~/.ssh/deploy_key_github
+
+# Install/update dependencies
+toolforge webservice php8.4 shell
+composer install
+exit
+
+# Restart service
+toolforge webservice restart
+
+# Switch php version
+toolforge webservice stop
+toolforge webservice php8.4 start
+toolforge webservice status
+Your webservice of type php8.4 is running on backend kubernetes
+```
