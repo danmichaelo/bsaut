@@ -858,7 +858,7 @@ $client = new SruClient($url, array(
 
 try {
     $response = $client->search($query, $start, $limit, $extras);
-} catch (\GuzzleHttp\Exception\BadResponseException $ex) {
+} catch (\Http\Client\Exception\HttpException | \GuzzleHttp\Exception\BadResponseException $ex) {
     http_response_code($ex->getResponse()->getStatusCode());
     echo json_encode([
         'error' => strval($ex),
