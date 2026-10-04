@@ -25,6 +25,8 @@ together with mappings from Wikidata.
   In the authority records, a record can be identified as belonging to "Nasjonalt autoritetsregister"
   if it has "status" set to "kat3".
 
+Requires PHP 8.4. On Toolforge, start the webservice with `toolforge webservice php8.4`. The default `toolforge webservice start` image is still PHP 7.4.
+
 ### Routes @ Toolforge
 
 * Home:
@@ -35,3 +37,15 @@ together with mappings from Wikidata.
 
 * Display a single record and related info:
   https://bsaut.toolforge.org/show/7031632
+
+### Development environment
+
+[devenv](https://devenv.sh/) provides PHP 8.4 and Composer.
+
+```bash
+devenv shell
+composer install
+devenv up
+```
+
+Open http://127.0.0.1:8080/. `devenv up` serves `public_html` and sends routes such as `/search` and `/show/7031632` to `index.html`, the same way `.lighttpd.conf` does on Toolforge. `composer install` is only needed when `vendor/` is missing.

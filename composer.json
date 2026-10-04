@@ -1,13 +1,13 @@
 {
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-json": "*",
-        "rmccue/requests": ">=1.0",
-        "scriptotek/marc": "^2.1",
+        "rmccue/requests": "^2.0",
+        "scriptotek/marc": "^3.0",
         "scriptotek/sru-client": "^0.7.0",
-        "php-http/guzzle6-adapter": "^2.0",
+        "php-http/guzzle7-adapter": "^1.1",
         "http-interop/http-factory-guzzle": "^1.0",
-        "nesbot/carbon": "^2.35",
+        "nesbot/carbon": "^3.0",
         "league/iso3166": "^4.0",
         "ml/json-ld": "^1.2"
     },
